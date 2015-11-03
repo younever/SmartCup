@@ -4,6 +4,11 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
+    <style name="CustomWindowTitleBackground">
+       <item name="android:background">#565656</item>
+</style>
+    
+    
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
@@ -16,5 +21,8 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+	<style name="test" parent="android:Theme">
+	     <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
+	</style>
 
 </resources>

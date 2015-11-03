@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"  
     android:layout_width="match_parent"  
-    android:layout_height="match_parent" >  
+    android:layout_height="match_parent"> 
+    <RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:layout_marginBottom="49dip"
+	    android:id="@+id/text2"
+	    android:background="@drawable/typeback">
+	    <RelativeLayout 
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_marginBottom="180dip">
+	        
+		    <ImageView 
+		        android:layout_width="180dip"
+		        android:layout_height="180dip"
+		        android:layout_centerInParent="true"
+		        android:src="@drawable/orange1"/>
+		    <ImageView 
+		        android:layout_width="150dip"
+		        android:layout_height="60dip"
+		        android:layout_alignParentBottom="true"
+		        android:layout_centerHorizontal="true"
+		        android:src="@drawable/orange4"/>
+	
+	    </RelativeLayout>	   
+	   	<LinearLayout
+	   	    android:id="@+id/tem3"
+	   	    android:layout_width="fill_parent"
+	   	    android:layout_height="180dip"
+	   	    android:layout_alignParentBottom="true"
+	   	    android:orientation="horizontal" >
+	   	</LinearLayout>
+	</RelativeLayout>
+
+    <TextView 
+       android:id="@+id/space2"
+       android:layout_height="49dip"
+       android:layout_width="wrap_content"
+       android:layout_above="@id/text2"
+       android:layout_alignParentBottom="true"
+       android:text=""/> 
   
-    <LinearLayout  
-        android:layout_width="wrap_content"  
-        android:layout_height="wrap_content"  
-        android:layout_centerInParent="true"  
-        android:orientation="vertical" >  
-  
-        <ImageView  
-            android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"  
-            android:layout_gravity="center_horizontal"  
-            android:src="@drawable/year" />  
-  
-        <TextView  
-            android:layout_width="wrap_content"  
-            android:layout_height="wrap_content"  
-            android:layout_gravity="center_horizontal"  
-            android:padding="10dp"  
-            android:text="总的数据"  
-            android:textSize="20sp" />  
-    </LinearLayout>  
+
   
 </RelativeLayout> 

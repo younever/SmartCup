@@ -4,12 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"        
-        android:background="@drawable/back" 
+        android:layout_height="49dp"        
+        android:background="@drawable/selectbar" 
         android:layout_alignParentBottom="true"
         >
 
@@ -17,7 +15,8 @@
             android:id="@+id/message_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="0.25" 
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -30,15 +29,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/today" />
+                    android:src="@drawable/temperture2" />
 
-                <TextView
-                    android:id="@+id/message_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="今天"
-                    android:textColor="#82858b" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -46,7 +38,7 @@
             android:id="@+id/contacts_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="0.25" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,15 +51,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/week" />
+                    android:src="@drawable/cup2" />
 
-                <TextView
-                    android:id="@+id/contacts_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="本周"
-                    android:textColor="#82858b" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -75,7 +60,7 @@
             android:id="@+id/news_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="0.25" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -88,15 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/year" />
+                    android:src="@drawable/smartcup2" />
 
-                <TextView
-                    android:id="@+id/news_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="历史"
-                    android:textColor="#82858b" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -104,7 +82,7 @@
             android:id="@+id/setting_layout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
+            android:layout_weight="0.25" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,15 +95,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/huihua" />
+                    android:src="@drawable/private2" />
 
-                <TextView
-                    android:id="@+id/setting_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="圈子"
-                    android:textColor="#82858b" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

@@ -18,6 +18,7 @@ import java.util.TimerTask;
 
 
 
+
 import com.example.smartcup.ContentModel;
 import com.example.smartcup.R;
 import com.zxing.activity.CaptureActivity;
@@ -36,6 +37,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -131,8 +133,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		list.add(new ContentModel(R.drawable.home, "主页"));
 		list.add(new ContentModel(R.drawable.set, "设备列表"));
 		list.add(new ContentModel(R.drawable.chat, "详细数据"));
-		list.add(new ContentModel(R.drawable.temp, "预留"));
-		list.add(new ContentModel(R.drawable.temp, "预留"));
+		list.add(new ContentModel(R.drawable.scan, "二维码扫描"));
+		list.add(new ContentModel(R.drawable.search, "公司主页"));
 		list.add(new ContentModel(R.drawable.temp, "预留"));
 	}
 	
@@ -167,21 +169,21 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if(mDrawerToggle.onOptionsItemSelected(item))
-			return true;
-		switch (item.getItemId()) {
-		case R.id.action_webserch:
-			Intent intent = new Intent();
-			intent.setAction("android.intent.action.VIEW");
-			Uri uri = Uri.parse("http://www.baidu.com");
-			intent.setData(uri);
-			startActivity(intent);
-			break;
-		case R.id.action_qrscan:
-			Intent intent_qr = new Intent(this,CaptureActivity.class);
-			startActivityForResult(intent_qr, 1);
-			break;
-		}
+//		if(mDrawerToggle.onOptionsItemSelected(item))
+//			return true;
+//		switch (item.getItemId()) {
+//		case R.id.action_webserch:
+//			Intent intent = new Intent();
+//			intent.setAction("android.intent.action.VIEW");
+//			Uri uri = Uri.parse("http://www.baidu.com");
+//			intent.setData(uri);
+//			startActivity(intent);
+//			break;
+//		case R.id.action_qrscan:
+//			Intent intent_qr = new Intent(this,CaptureActivity.class);
+//			startActivityForResult(intent_qr, 1);
+//			break;
+//		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -190,7 +192,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		// TODO Auto-generated method stub
 		
 		boolean isDrawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_webserch).setVisible(!isDrawerOpen);
+//		menu.findItem(R.id.action_webserch).setVisible(!isDrawerOpen);
 		return super.onPrepareOptionsMenu(menu);
 	}
 	
@@ -231,6 +233,19 @@ public class MainActivity extends Activity implements OnItemClickListener{
 			break;
 		case 2:
 			startActivity(new Intent(MainActivity.this,chatActivity.class));
+			break;
+		case 3:
+			Intent intent_qr = new Intent(this,CaptureActivity.class);
+			startActivityForResult(intent_qr, 1);
+			break;
+		case 4:
+			Intent intent = new Intent();
+			intent.setAction("android.intent.action.VIEW");
+			Uri uri = Uri.parse("http://www.baidu.com");
+			intent.setData(uri);
+			startActivity(intent);
+			break;
+			
 		}
 
 		mDrawerLayout.closeDrawer(mDrawerList);

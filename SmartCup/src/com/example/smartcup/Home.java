@@ -34,10 +34,10 @@ public class Home extends Fragment {
     private ImageView contactsImage;  
     private ImageView newsImage;  
     private ImageView settingImage;   
-    private TextView messageText;  
-    private TextView contactsText;  
-    private TextView newsText;  
-    private TextView settingText;  
+//    private TextView messageText;  
+//    private TextView contactsText;  
+//    private TextView newsText;  
+//    private TextView settingText;  
     private FragmentManager fragmentManager; 
 //    private FragmentManager mFmanager;
     
@@ -58,10 +58,10 @@ public class Home extends Fragment {
         contactsImage = (ImageView) view.findViewById(R.id.contacts_image);  
         newsImage = (ImageView) view.findViewById(R.id.news_image);  
         settingImage = (ImageView) view.findViewById(R.id.setting_image);  
-        messageText = (TextView) view.findViewById(R.id.message_text);  
-        contactsText = (TextView) view.findViewById(R.id.contacts_text);  
-        newsText = (TextView) view.findViewById(R.id.news_text);  
-        settingText = (TextView) view.findViewById(R.id.setting_text);  
+//        messageText = (TextView) view.findViewById(R.id.message_text);  
+//        contactsText = (TextView) view.findViewById(R.id.contacts_text);  
+//        newsText = (TextView) view.findViewById(R.id.news_text);  
+//        settingText = (TextView) view.findViewById(R.id.setting_text);  
         
 //        mFmanager = getFragmentManager();
 //        if (savedInstanceState != null) {
@@ -109,47 +109,12 @@ public class Home extends Fragment {
 		
  
         fragmentManager = getFragmentManager();  
-        // 第一次启动时选中第0个tab  
-        setTabSelection(0);  
+        // 第一次启动时选中第1个tab  
+        setTabSelection(1);  
 		return view;	
 		
 	}
 	  
-//	@Override
-//	public void onSaveInstanceState(Bundle outState) {
-//		// TODO Auto-generated method stub
-//		Log.v("LH","onSaveInstanceState"+outState);
-//		super.onSaveInstanceState(outState);
-//	}
-	
-
-
-	
-	
-/*    @Override  
-    public void onClick(View v) {  
-        switch (v.getId()) {  
-        case R.id.message_layout:  
-            // 当点击了消息tab时，选中第1个tab  
-            setTabSelection(0);  
-            break;  
-        case R.id.contacts_layout:  
-            // 当点击了联系人tab时，选中第2个tab  
-            setTabSelection(1);  
-            break;  
-        case R.id.news_layout:  
-            // 当点击了动态tab时，选中第3个tab  
-            setTabSelection(2);  
-            break;  
-        case R.id.setting_layout:  
-            // 当点击了设置tab时，选中第4个tab  
-            setTabSelection(3);  
-            break;  
-        default:  
-            break;  
-        }  
-    }  
-  */
     /** 
      * 根据传入的index参数来设置选中的tab页。 
      *  
@@ -166,8 +131,8 @@ public class Home extends Fragment {
         switch (index) {  
         case 0:  
             // 当点击了消息tab时，改变控件的图片和文字颜色  
-            messageImage.setImageResource(R.drawable.today1);  
-            messageText.setTextColor(Color.WHITE);  
+            
+//            messageText.setTextColor(Color.parseColor("#82858b"));  
             if (messageFragment == null) {  
                 // 如果MessageFragment为空，则创建一个并添 加到界面上  
                 messageFragment = new Today();  
@@ -175,12 +140,13 @@ public class Home extends Fragment {
             } else {  
                 // 如果MessageFragment不为空，则直接将它显示出来  
                 transaction.show(messageFragment);  
-            }  
+            } 
+            messageImage.setImageResource(R.drawable.temperture1);  
             break;  
         case 1:  
             // 当点击了联系人tab时，改变控件的图片和文字颜色  
-            contactsImage.setImageResource(R.drawable.week1);  
-            contactsText.setTextColor(Color.WHITE);  
+            
+//            contactsText.setTextColor(Color.parseColor("#82858b"));  
             if (contactsFragment == null) {  
                 // 如果ContactsFragment为空，则创建一个并添加到界面上  
                 contactsFragment = new Week();  
@@ -189,11 +155,12 @@ public class Home extends Fragment {
                 // 如果ContactsFragment不为空，则直接将它显示出来  
                 transaction.show(contactsFragment);  
             }  
+            contactsImage.setImageResource(R.drawable.cup1);  
             break;  
         case 2:  
             // 当点击了动态tab时，改变控件的图片和文字颜色  
-            newsImage.setImageResource(R.drawable.year1);  
-            newsText.setTextColor(Color.WHITE);  
+            newsImage.setImageResource(R.drawable.smartcup1);  
+//            newsText.setTextColor(Color.parseColor("#82858b"));  
             if (newsFragment == null) {  
                 // 如果NewsFragment为空，则创建一个并添加到界面上  
                 newsFragment = new AllData();  
@@ -201,13 +168,14 @@ public class Home extends Fragment {
             } else {  
                 // 如果NewsFragment不为空，则直接将它显示出来  
                 transaction.show(newsFragment);  
-            }  
+            } 
+            newsImage.setImageResource(R.drawable.smartcup1);
             break;  
         case 3:  
         default:  
             // 当点击了设置tab时，改变控件的图片和文字颜色  
-            settingImage.setImageResource(R.drawable.huihua1);  
-            settingText.setTextColor(Color.WHITE);  
+           
+//            settingText.setTextColor(Color.parseColor("#82858b"));  
             if (settingFragment == null) {  
                 // 如果SettingFragment为空，则创建一个并添加到界面上  
                 settingFragment = new Friend();  
@@ -216,6 +184,7 @@ public class Home extends Fragment {
                 // 如果SettingFragment不为空，则直接将它显示出来  
                 transaction.show(settingFragment);  
             }  
+            settingImage.setImageResource(R.drawable.private1);  
             break;  
         }  
         transaction.commit();  
@@ -225,14 +194,14 @@ public class Home extends Fragment {
      * 清除掉所有的选中状态。 
      */  
     private void clearSelection() {  
-        messageImage.setImageResource(R.drawable.today);  
-        messageText.setTextColor(Color.parseColor("#82858b"));  
-        contactsImage.setImageResource(R.drawable.week);  
-        contactsText.setTextColor(Color.parseColor("#82858b"));  
-        newsImage.setImageResource(R.drawable.year);  
-        newsText.setTextColor(Color.parseColor("#82858b"));  
-        settingImage.setImageResource(R.drawable.huihua);  
-        settingText.setTextColor(Color.parseColor("#82858b"));  
+        messageImage.setImageResource(R.drawable.temperture2);  
+//        messageText.setTextColor(Color.WHITE);  
+        contactsImage.setImageResource(R.drawable.cup2);  
+//        contactsText.setTextColor(Color.WHITE);  
+        newsImage.setImageResource(R.drawable.smartcup2);  
+//        newsText.setTextColor(Color.WHITE);  
+        settingImage.setImageResource(R.drawable.private2);  
+//        settingText.setTextColor(Color.WHITE);  
     }  
   
     /** 

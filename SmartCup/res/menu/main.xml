@@ -1,8 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.smartcup.MainActivity" >
+    tools:context="com.example.smartcup.MainActivity"
+     >
 
-    <item
+<!-- 
+<item
         android:id="@+id/action_webserch"
         android:icon="@drawable/search"
         android:showAsAction="ifRoom|withText"
@@ -14,4 +16,6 @@
         android:showAsAction="ifRoom|withText"
         android:title="QRscan"
         />
+ -->    
 </menu>
+
