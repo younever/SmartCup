@@ -20,6 +20,7 @@ import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.example.smartcup.R;
 
+import android.Manifest.permission;
 import android.R.layout;
 import android.app.Fragment;
 import android.content.Context;
@@ -27,6 +28,8 @@ import android.graphics.Color;
 import android.graphics.AvoidXfermode.Mode;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
+import android.os.FileObserver;
+import android.text.format.Time;
 import android.text.style.SuperscriptSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,40 +44,65 @@ public class Today extends Fragment {
 	
 	LinearLayout layout;
 	private GraphicalView mChartView; //显示图表
-		
+	PublicMethod pMethod = new PublicMethod();
+	String date[];
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
         View todayData = inflater.inflate(R.layout.today, container, false);  
         
-        XYMultipleSeriesRenderer rendererT = new XYMultipleSeriesRenderer();
+//        FileObserver mFileObserver = new 
+        
+        mChartView = drawGraphicalViewTemperture();
+        layout = (LinearLayout) todayData.findViewById(R.id.tem1);
+        layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));;
+        return todayData;  
+    }
+
+	private GraphicalView drawGraphicalViewTemperture()
+	{
+		
+		int min,max;
+		int monthMax = pMethod.getMonthMax();
+		if (pMethod.getDate()>=7) {
+			max = pMethod.getDate();
+			min = pMethod.getDate() - 7;
+		}
+		else {
+			max = 7;
+			min = 1;
+		}
+		GraphicalView mChartView;
+		XYMultipleSeriesRenderer rendererT = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset datasetT = new XYMultipleSeriesDataset();
-        Random r2= new Random();
         XYSeries seriesT = new XYSeries("");
-        for (int k = 1; k < 31; k++) {
-        	seriesT.add(k, r2.nextInt()%100);
+        Random r2= new Random();
+        for (int i = 1; i <= monthMax; i++) {
+        	pMethod.writeToTxt(getActivity(), i+"日.txt",r2.nextInt()%100+""); //
+		}
+        for (int i = 1; i <= monthMax; i++) {
+			seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(), i+"日.txt")));
+			rendererT.addTextLabel(i, i+"日");
 		}
         datasetT.addSeries(seriesT);
-        
         XYSeriesRenderer xyRendererT =  new XYSeriesRenderer();
         xyRendererT.setColor(Color.GRAY);
         xyRendererT.setPointStyle(PointStyle.CIRCLE);
         xyRendererT.setDisplayChartValuesDistance(30);
         xyRendererT.setDisplayChartValues(true);
+        xyRendererT.setChartValuesTextSize(15f);
         rendererT.addSeriesRenderer(xyRendererT);
-        rendererT.setXLabels(10);
+        rendererT.setXLabels(0);
         rendererT.setYLabels(10);
         rendererT.setShowLegend(false);
         rendererT.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-        rendererT.setZoomEnabled(true);
         rendererT.setPanEnabled(true);
-        rendererT.setZoomEnabled(true, false);
+        rendererT.setZoomEnabled(false, false);
         rendererT.setPanEnabled(true, false);
         rendererT.setExternalZoomEnabled(true);
-        rendererT.setZoomInLimitX(3);
-        rendererT.setZoomRate(3.0f);
-        rendererT.setXAxisMin(4);
-        rendererT.setXAxisMax(10);
+        rendererT.setXAxisMin(min);
+        rendererT.setXAxisMax(max);
+        rendererT.setLabelsTextSize(15);
         rendererT.setClickEnabled(false);
         rendererT.setFitLegend(true);// 调整合适的位置
         rendererT.setChartTitleTextSize(0);
@@ -86,63 +114,10 @@ public class Today extends Fragment {
         rendererT.setAntialiasing(true);
         rendererT.setXLabelsPadding(1);
         rendererT.setShowGridX(true);        
-        
-        layout = (LinearLayout) todayData.findViewById(R.id.tem1);
         mChartView = ChartFactory.getLineChartView(getActivity(), datasetT, rendererT);
-        layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));;
-        return todayData;  
-    }
-
-
-	public  void writeToTxt(String filename,String data)
-	{
-		FileOutputStream fos1;
-		try {
-			fos1 = getActivity().openFileOutput(filename,Context.MODE_PRIVATE );
-			OutputStreamWriter osw1 = new OutputStreamWriter(fos1, "UTF-8");
-			osw1.write(data);
-			osw1.flush();
-			fos1.flush();
-			osw1.close();
-			fos1.close();
-		} catch (FileNotFoundException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-
+		return mChartView;
 	}
 	
-	public String readFromTxt(String filename) {
-		String readed1 = null;
-		try {
-			FileInputStream fis1 = getActivity().openFileInput(MainActivity.fileName_data);
-			InputStreamReader is1 = new InputStreamReader(fis1, "UTF-8");
-			char input1[] = new char[fis1.available()];
-			is1.read(input1);
-			is1.close();
-			fis1.close();
-			readed1 = new String(input1);
-						
-		} catch (FileNotFoundException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
-			e.printStackTrace();
-		}
-		return readed1;
-		
-	}
-
-
-
+	
+	
 }

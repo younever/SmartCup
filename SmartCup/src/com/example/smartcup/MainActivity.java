@@ -169,8 +169,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-//		if(mDrawerToggle.onOptionsItemSelected(item))
-//			return true;
+		if(mDrawerToggle.onOptionsItemSelected(item))
+			return true;
 //		switch (item.getItemId()) {
 //		case R.id.action_webserch:
 //			Intent intent = new Intent();

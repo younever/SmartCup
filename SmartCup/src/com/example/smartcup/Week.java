@@ -21,52 +21,69 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class Week extends Fragment {
 	
 	LinearLayout layout;
 	private GraphicalView mChartView; //显示图表
+	PublicMethod pMethod = new PublicMethod();
+	TextView textView;
 	@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
         View contactsLayout = inflater.inflate(R.layout.week,  
                 container, false);  
-//        setContentView(R.layout.activity_main);
-        XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
-        // 2,进行显示
+        mChartView = draGraphicalViewDrink();
+        layout = (LinearLayout) contactsLayout.findViewById(R.id.tem2);
+        layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        return contactsLayout;  
+    } 
+
+	private GraphicalView draGraphicalViewDrink(){
+		GraphicalView mChartView;
+		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-        // 2.1, 构建数据
-        Random r = new Random();
-        for (int i = 0; i < 1; i++) {
-            XYSeries series = new XYSeries("");
-            // 填充数据
-            for (int k = 1; k < 8; k++) {
-                // 填x,y值
-                series.add(k, 20 + r.nextInt() % 100); //20 + r.nextInt() % 100
-            }
-            // 需要绘制的点放进dataset中
-            dataset.addSeries(series);
+        
+        int min,max,hour;
+        hour=pMethod.getHour();    //设置坐标轴显示的初始坐标
+        if (hour>=7) {
+			max=hour;
+			min=hour-7;
+		}
+        else {
+			min = 0;
+			max = 7;
+		} 
+        Random r = new Random(); //临时数值
+        for(int i=0;i<=24;i++)
+        {
+       	 pMethod.writeToTxt(getActivity(),i+":00.txt",r.nextInt()%100+"");
         }
-        // 3, 对点的绘制进行设置
-        XYSeriesRenderer xyRenderer = new XYSeriesRenderer();
-        // 3.1设置颜色
-        xyRenderer.setColor(Color.GRAY);
-        // 3.2设置点的样式
-        xyRenderer.setPointStyle(PointStyle.SQUARE);
-        // 3.3, 将要绘制的点添加到坐标绘制中
-//        xyRenderer.setFillBelowLine(true);
-//        xyRenderer.setFillBelowLineColor(Color.RED);
+	    XYSeries series = new XYSeries("");
+	    // 填充数据
+	    for (int k = 0; k <= 24; k++) {
+	        // 填x,y值
+	        series.add(k, Double.valueOf(pMethod.readFromTxt(getActivity(), k+":00.txt"))); //20 + r.nextInt() % 100
+	        renderer.addTextLabel(k,k+":00");               
+	    }
+	    // 需要绘制的点放进dataset中
+	    dataset.addSeries(series);
+
+        XYSeriesRenderer xyRenderer = new XYSeriesRenderer();// 对点的绘制进行设置
+        xyRenderer.setColor(Color.GRAY);//设置颜色
+        xyRenderer.setPointStyle(PointStyle.SQUARE);//设置点的样式
         xyRenderer.setDisplayChartValuesDistance(30);
         xyRenderer.setDisplayChartValues(true);
         renderer.addSeriesRenderer(xyRenderer);
-        renderer.setXLabels(7);
+        renderer.setXLabels(0);
         renderer.setYLabels(9);//设置Y轴标签数 
+        renderer.setXAxisMin(min);
+        renderer.setXAxisMax(max);
         renderer.setShowLegend(false);
-//        renderer.setApplyBackgroundColor(true);
-//        renderer.setBackgroundColor(Color.GREEN);
         renderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
         renderer.setZoomEnabled(false,false);
-        renderer.setPanEnabled(false);
+        renderer.setPanEnabled(true,false);
         renderer.setExternalZoomEnabled(false);
         renderer.setClickEnabled(false);
         renderer.setFitLegend(true);// 调整合适的位置
@@ -75,19 +92,12 @@ public class Week extends Fragment {
         renderer.setXLabelsColor(Color.BLACK);//设置X轴刻度颜色
         renderer.setYLabelsColor(0, Color.BLACK);//设置Y轴刻度颜色
         renderer.setYLabelsAlign(Align.RIGHT, 0);
-//        renderer.setYTitle("全天喝水量");
-//        renderer.setYTitle("sss", Color.BLUE);
         renderer.setAxesColor(Color.WHITE);//设置坐标轴颜色
         renderer.setLabelsColor(Color.WHITE);
         renderer.setAntialiasing(true); 
-//        renderer.setGridColor(Color.BLUE);
-//        renderer.setShowGrid(true);//设置是否在图表中显示网格
-        
-        
-        
-        layout = (LinearLayout) contactsLayout.findViewById(R.id.tem2);
+        renderer.setShowGridX(true);
         mChartView = ChartFactory.getLineChartView(getActivity(), dataset, renderer);
-        layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-        return contactsLayout;  
-    }  
+		return mChartView;
+		
+	}
 }

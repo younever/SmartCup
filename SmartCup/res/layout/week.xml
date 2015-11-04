@@ -10,25 +10,40 @@
 	    android:layout_marginBottom="49dip"
 	    android:id="@+id/text"
 	    android:background="@drawable/cupback">
-	    <RelativeLayout 
+
+	    <RelativeLayout
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
-	        android:layout_marginBottom="180dip">
-	        
-		    <ImageView 
-		        android:layout_width="180dip"
-		        android:layout_height="180dip"
-		        android:layout_centerInParent="true"
-		        android:src="@drawable/watercircle"/>
+	        android:layout_marginBottom="180dip" >
 
-		    <ImageView
-		        android:layout_width="90dip"
-		        android:layout_height="60dip"
-		        android:layout_alignParentBottom="true"
-		        android:layout_centerHorizontal="true"
-		        android:src="@drawable/waternum" />
-	
-	        </RelativeLayout>	   
+	        <ImageView
+	            android:id="@+id/imageView1"
+	            android:layout_width="180dip"
+	            android:layout_height="180dip"
+	            android:layout_centerHorizontal="true"
+	            android:layout_marginTop="50dip"
+	            android:src="@drawable/watercircle" />
+
+	        <ImageView
+	            android:id="@+id/drinkpic"
+	            android:layout_width="90dip"
+	            android:layout_height="60dip"
+	            android:layout_alignParentBottom="true"
+	            android:layout_centerHorizontal="true"
+	            android:src="@drawable/waternum1" />
+
+	        <TextView
+	            android:id="@+id/drink"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_above="@+id/drinkpic"
+	            android:layout_centerHorizontal="true"
+	            android:text="1000 ml"
+	            android:textColor="#ffffff"
+	            android:textSize="20sp" />
+
+	    </RelativeLayout>
+	   
 	   	<LinearLayout
 	   	    android:id="@+id/tem2"
 	   	    android:layout_width="fill_parent"

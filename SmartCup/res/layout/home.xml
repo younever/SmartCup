@@ -29,7 +29,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/temperture2" />
+                    android:src="@drawable/temperture1" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/cup2" />
+                    android:src="@drawable/cup1" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -73,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/smartcup2" />
+                    android:src="@drawable/smartcup1" />
 
             </LinearLayout>
         </RelativeLayout>
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/private2" />
+                    android:src="@drawable/private1" />
 
             </LinearLayout>
         </RelativeLayout>

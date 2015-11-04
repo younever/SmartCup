@@ -141,7 +141,7 @@ public class Home extends Fragment {
                 // 如果MessageFragment不为空，则直接将它显示出来  
                 transaction.show(messageFragment);  
             } 
-            messageImage.setImageResource(R.drawable.temperture1);  
+            messageImage.setImageResource(R.drawable.temperture2);  
             break;  
         case 1:  
             // 当点击了联系人tab时，改变控件的图片和文字颜色  
@@ -155,7 +155,7 @@ public class Home extends Fragment {
                 // 如果ContactsFragment不为空，则直接将它显示出来  
                 transaction.show(contactsFragment);  
             }  
-            contactsImage.setImageResource(R.drawable.cup1);  
+            contactsImage.setImageResource(R.drawable.cup2);  
             break;  
         case 2:  
             // 当点击了动态tab时，改变控件的图片和文字颜色  
@@ -169,7 +169,7 @@ public class Home extends Fragment {
                 // 如果NewsFragment不为空，则直接将它显示出来  
                 transaction.show(newsFragment);  
             } 
-            newsImage.setImageResource(R.drawable.smartcup1);
+            newsImage.setImageResource(R.drawable.smartcup2);
             break;  
         case 3:  
         default:  
@@ -184,7 +184,7 @@ public class Home extends Fragment {
                 // 如果SettingFragment不为空，则直接将它显示出来  
                 transaction.show(settingFragment);  
             }  
-            settingImage.setImageResource(R.drawable.private1);  
+            settingImage.setImageResource(R.drawable.private2);  
             break;  
         }  
         transaction.commit();  
@@ -194,13 +194,13 @@ public class Home extends Fragment {
      * 清除掉所有的选中状态。 
      */  
     private void clearSelection() {  
-        messageImage.setImageResource(R.drawable.temperture2);  
+        messageImage.setImageResource(R.drawable.temperture1);  
 //        messageText.setTextColor(Color.WHITE);  
-        contactsImage.setImageResource(R.drawable.cup2);  
+        contactsImage.setImageResource(R.drawable.cup1);  
 //        contactsText.setTextColor(Color.WHITE);  
-        newsImage.setImageResource(R.drawable.smartcup2);  
+        newsImage.setImageResource(R.drawable.smartcup1);  
 //        newsText.setTextColor(Color.WHITE);  
-        settingImage.setImageResource(R.drawable.private2);  
+        settingImage.setImageResource(R.drawable.private1);  
 //        settingText.setTextColor(Color.WHITE);  
     }  
   
