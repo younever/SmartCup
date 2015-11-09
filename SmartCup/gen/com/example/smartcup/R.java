@@ -52,6 +52,7 @@ public final class R {
         public static final int activity_vertical_margin=0x7f080001;
     }
     public static final class drawable {
+        public static final int BackBar=0x7f020026;
         public static final int chat=0x7f020000;
         public static final int cocacola2=0x7f020001;
         public static final int coffee2=0x7f020002;
@@ -77,18 +78,19 @@ public final class R {
         public static final int set=0x7f020016;
         public static final int smartcup1=0x7f020017;
         public static final int smartcup2=0x7f020018;
-        public static final int startphoto=0x7f020019;
-        public static final int tea2=0x7f02001a;
-        public static final int temp=0x7f02001b;
-        public static final int temper=0x7f02001c;
-        public static final int temperback=0x7f02001d;
-        public static final int tempernum=0x7f02001e;
-        public static final int temperture1=0x7f02001f;
-        public static final int temperture2=0x7f020020;
-        public static final int typeback=0x7f020021;
-        public static final int watercircle=0x7f020022;
-        public static final int waternum1=0x7f020023;
-        public static final int wine2=0x7f020024;
+        public static final int space=0x7f020019;
+        public static final int startphoto=0x7f02001a;
+        public static final int tea2=0x7f02001b;
+        public static final int temp=0x7f02001c;
+        public static final int temper=0x7f02001d;
+        public static final int temperback=0x7f02001e;
+        public static final int tempernum=0x7f02001f;
+        public static final int temperture1=0x7f020020;
+        public static final int temperture2=0x7f020021;
+        public static final int typeback=0x7f020022;
+        public static final int watercircle=0x7f020023;
+        public static final int waternum1=0x7f020024;
+        public static final int wine2=0x7f020025;
     }
     public static final class id {
         public static final int MessageText=0x7f060025;
@@ -98,14 +100,14 @@ public final class R {
         public static final int auto_focus=0x7f060000;
         public static final int bt_bottombar=0x7f060029;
         public static final int btn_add_qrcode=0x7f060039;
-        public static final int btn_cancel_scan=0x7f060020;
+        public static final int btn_cancel_scan=0x7f06001f;
         public static final int btn_disconnect=0x7f060023;
         public static final int btn_msg_send=0x7f060024;
         public static final int btn_scan_barcode=0x7f060036;
         public static final int chat_msg=0x7f060035;
         public static final int contacts_image=0x7f06002f;
         public static final int contacts_layout=0x7f06002e;
-        public static final int container=0x7f060021;
+        public static final int container=0x7f060020;
         public static final int content_frame=0x7f06000d;
         public static final int decode=0x7f060001;
         public static final int decode_failed=0x7f060002;
@@ -130,38 +132,38 @@ public final class R {
         public static final int left=0x7f060011;
         public static final int left_drawer=0x7f06000e;
         public static final int left_listview=0x7f060012;
-        public static final int list=0x7f060022;
+        public static final int list=0x7f060021;
         public static final int list_child=0x7f060034;
         public static final int message_image=0x7f06002d;
         public static final int message_layout=0x7f06002c;
         public static final int news_image=0x7f060031;
         public static final int news_layout=0x7f060030;
-        public static final int preview_view=0x7f06001e;
+        public static final int preview_view=0x7f06001d;
         public static final int quit=0x7f060007;
+        public static final int relativeLayout1=0x7f060022;
         public static final int restart_preview=0x7f060008;
         public static final int return_scan_result=0x7f060009;
         public static final int right=0x7f060013;
         public static final int right_textview=0x7f060014;
         public static final int search_book_contents_failed=0x7f06000a;
         public static final int search_book_contents_succeeded=0x7f06000b;
-        public static final int seekBar1=0x7f06001b;
         public static final int setting_image=0x7f060033;
         public static final int setting_layout=0x7f060032;
         public static final int space=0x7f060043;
         public static final int space1=0x7f06003e;
-        public static final int space2=0x7f06001d;
+        public static final int space2=0x7f06001c;
         public static final int start_seach=0x7f06002b;
         public static final int start_service=0x7f06002a;
         public static final int tem1=0x7f06003d;
         public static final int tem2=0x7f060042;
-        public static final int tem3=0x7f06001c;
+        public static final int tem3=0x7f06001b;
         public static final int text=0x7f06003f;
         public static final int text1=0x7f06003c;
         public static final int text2=0x7f060015;
         public static final int textView1=0x7f060018;
         public static final int textView2=0x7f060017;
         public static final int tv_scan_result=0x7f060037;
-        public static final int viewfinder_view=0x7f06001f;
+        public static final int viewfinder_view=0x7f06001e;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -181,7 +183,8 @@ public final class R {
         public static final int new_chat=0x7f03000e;
         public static final int startactivity=0x7f03000f;
         public static final int today=0x7f030010;
-        public static final int week=0x7f030011;
+        public static final int toolbar=0x7f030011;
+        public static final int week=0x7f030012;
     }
     public static final class menu {
         public static final int main=0x7f0a0000;
@@ -204,13 +207,8 @@ public final class R {
         public static final int title_activity_test=0x7f070006;
     }
     public static final class style {
+        public static final int Actionbar=0x7f090004;
         /** 
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-
-        
-
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.
 
@@ -229,12 +227,6 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f090002;
-        /** 
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-
-    
-         */
         public static final int CustomWindowTitleBackground=0x7f090000;
         public static final int test=0x7f090003;
     }

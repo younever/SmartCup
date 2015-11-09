@@ -19,8 +19,13 @@ import java.util.TimerTask;
 
 
 
+
+
+
+
 import com.example.smartcup.ContentModel;
 import com.example.smartcup.R;
+import com.example.smartcup.R.style;
 import com.zxing.activity.CaptureActivity;
 
 import android.app.Activity;
@@ -29,6 +34,9 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources.Theme;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -75,13 +83,18 @@ public class MainActivity extends Activity implements OnItemClickListener{
     private static Boolean isExit = false;
     private long exitTime = 0;
 	private Object activity;
-	
+
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-         
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY); 
+		getActionBar().setDisplayShowHomeEnabled(false);
+		getActionBar().setBackgroundDrawable(this.getBaseContext().getResources().getDrawable(R.drawable.BackBar));
+        getActionBar().show();
+
+		setContentView(R.layout.activity_main);
+       
         drawerLayout = (DrawerLayout) findViewById(R.id.draw_layout);
         initData();
         adapter2 = new ContentAdapter(this, list);
@@ -115,10 +128,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
         	}
         }; 
         
-       startService(new Intent(MainActivity.this,ReceiveService.class));
-        
+       startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
        
-        
         Fragment contentFragment1 = new Home();			   //直接默认启动Home Page
 		FragmentManager fm1 = getFragmentManager();
 		fm1.beginTransaction().addToBackStack(null).replace(R.id.content_frame,contentFragment1).commit();
@@ -129,7 +140,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
     }
 	
 	private void initData() {
-		list=new ArrayList<ContentModel>();		
+		list=new ArrayList<ContentModel>();	
 		list.add(new ContentModel(R.drawable.home, "主页"));
 		list.add(new ContentModel(R.drawable.set, "设备列表"));
 		list.add(new ContentModel(R.drawable.chat, "详细数据"));

@@ -36,17 +36,6 @@ public class StartActivity extends Activity {
 		finish();
 		}
 		}, 1000);
-	
-	//	private void run() {
-//		// TODO Auto-generated method stub
-//		try {
-//			mThread.sleep(3000);
-//			Intent intent = new Intent();
-//			intent.setClass(StartActivity.this, MainActivity.class);
-//			startActivity(intent);
-//			} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		
 	}
 }

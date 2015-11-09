@@ -24,8 +24,9 @@ import android.widget.Toast;
 public class ReceiveService extends Service {
 
 	private static clientThread clientConnectThread = null;
-	static readThread mreadThread = null;;
+	readThread mreadThread = null;;
 	
+	PublicMethod publicMethod =  new PublicMethod();
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -90,7 +91,6 @@ public class ReceiveService extends Service {
 					Message msg = new Message();
 					msg.obj = "已经连接上服务端！可以发送信息。";
 					msg.what = 0;
-					//chatActivity.LinkDetectedHandler.sendMessage(msg);
 					chatActivity.LinkDetectedHandler.sendMessage(msg);
 					// 启动接受数据
 					mreadThread = new readThread();
@@ -106,7 +106,7 @@ public class ReceiveService extends Service {
 		};
 		
 		/* 停止客户端连接 */
-		public static void shutdownClient() {
+		public  void shutdownClient() {
 			new Thread() {
 				public void run() {
 					if (clientConnectThread != null) {
@@ -131,7 +131,7 @@ public class ReceiveService extends Service {
 		}
 		
 		// 读取数据
-		public static class readThread extends Thread {
+		public class readThread extends Thread {
 			public void run() {
 
 				byte[] buffer = new byte[1024];
@@ -153,10 +153,11 @@ public class ReceiveService extends Service {
 									buf_data[i] = buffer[i];
 								}
 								String s = new String(buf_data);
-								Message msg = new Message();
+								Message msg = new Message();		
+								publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
+//								String temp = publicMethod.readFromTxt(getApplicationContext(), "test.txt");
 								msg.obj = s;
 								msg.what = 0;
-								System.out.println(s);
 								chatActivity.LinkDetectedHandler.sendMessage(msg);
 						}
 					} catch (IOException e) {
@@ -207,7 +208,6 @@ public class ReceiveService extends Service {
 					Log.d("mylog", "setPiN failed!");
 					e.printStackTrace();
 				} //
-
 			}
 			else
 			{

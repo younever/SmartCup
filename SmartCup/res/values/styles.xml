@@ -1,20 +1,13 @@
 <resources>
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
+
     <style name="CustomWindowTitleBackground">
-       <item name="android:background">#565656</item>
-</style>
-    
+        <item name="android:background">#00000101</item>
+    </style>
+    <drawable name="BackBar">#0000</drawable>
     
     <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+        
     </style>
 
     <!-- Application theme. -->
@@ -24,5 +17,18 @@
 	<style name="test" parent="android:Theme">
 	     <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
 	</style>
+	
+	<style name="Actionbar">
+         <item name="android:titleTextStyle">@android:style/TextAppearance.Holo.Widget.ActionBar.Title</item>
+         <item name="android:subtitleTextStyle">@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle</item>
+         <!-- <item name="android:background">@android:drawable/ab_solid_light_holo</item> -->
+         <!-- <item name="android:backgroundStacked">@android:drawable/ab_stacked_solid_light_holo</item> -->
+         <!-- <item name="android:backgroundSplit">@android:drawable/ab_bottom_solid_light_holo</item> -->
+         <item name="android:divider">?android:attr/dividerVertical</item>
+         <item name="android:progressBarStyle">@android:style/Widget.Holo.Light.ProgressBar.Horizontal</item>
+         <item name="android:indeterminateProgressStyle">@android:style/Widget.Holo.Light.ProgressBar</item>
+         <item name="android:progressBarPadding">32dip</item>
+         <item name="android:itemPadding">8dip</item>  
+  </style> 
 
 </resources>
