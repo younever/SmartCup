@@ -1,5 +1,6 @@
 package com.example.smartcup;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,9 +9,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 
+import com.zxing.activity.CaptureActivity;
+
 import android.R.integer;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.format.Time;
+import android.widget.Toast;
 
 
 public class PublicMethod {
@@ -108,6 +116,8 @@ public class PublicMethod {
 		return readed1;
 		
 	}
+	
+
 	
 	public int getMonthMax() {
 		int month = getMonth();

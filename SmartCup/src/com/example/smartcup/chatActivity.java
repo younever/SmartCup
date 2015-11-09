@@ -185,6 +185,7 @@ public class chatActivity extends Activity implements OnItemClickListener,
 				// 启动接受数据
 				mreadThread = new readThread();
 				mreadThread.start();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

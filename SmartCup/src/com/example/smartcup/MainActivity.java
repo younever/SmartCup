@@ -1,5 +1,6 @@
 package com.example.smartcup;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -23,15 +24,25 @@ import java.util.TimerTask;
 
 
 
+
+
+
+
+
+
 import com.example.smartcup.ContentModel;
 import com.example.smartcup.R;
 import com.example.smartcup.R.style;
 import com.zxing.activity.CaptureActivity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.ClipData.Item;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources.Theme;
@@ -83,18 +94,20 @@ public class MainActivity extends Activity implements OnItemClickListener{
     private static Boolean isExit = false;
     private long exitTime = 0;
 	private Object activity;
+	private boolean qrReady=false;
 
+	PublicMethod publicMethod;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY); 
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);          //
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setBackgroundDrawable(this.getBaseContext().getResources().getDrawable(R.drawable.BackBar));
         getActionBar().show();
 
 		setContentView(R.layout.activity_main);
-       
+		mContext = this;
         drawerLayout = (DrawerLayout) findViewById(R.id.draw_layout);
         initData();
         adapter2 = new ContentAdapter(this, list);
@@ -106,10 +119,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
         
        	
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.menu, R.string.Drawer_open, R.string.Drawer_close){
-        
-        	
-        	
-        	
         	@Override
         	public void onDrawerOpened(View drawerView) {
         		// TODO Auto-generated method stub
@@ -127,8 +136,58 @@ public class MainActivity extends Activity implements OnItemClickListener{
         		invalidateOptionsMenu();  //Call onPrepareOptionsMenu();
         	}
         }; 
+       
+      
+        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
+		File addressFile = new File(pathString);
+		if (!addressFile.exists()) {
+			Builder ConnetDialog = new AlertDialog.Builder(this);
+			ConnetDialog.setTitle("SmartCup");
+			ConnetDialog.setMessage("是否进行二维码连接");
+			ConnetDialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO 自动生成的方法存根
+					serviceOrCilent=ServerOrCilent.CILENT;
+					Intent intent_qr = new Intent(mContext,CaptureActivity.class);
+					startActivityForResult(intent_qr, 1);
+				}
+			});
+			ConnetDialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO 自动生成的方法存根
+					Toast.makeText(mContext, "请手动添加智能水杯", 1).show();
+				}
+			});
+			ConnetDialog.show();
+		}
+		else {
+			serviceOrCilent=ServerOrCilent.CILENT;
+			try {
+				FileInputStream fis1 = mContext.openFileInput("BlueToothAddress.txt");
+				InputStreamReader is1 = new InputStreamReader(fis1, "UTF-8");
+				char input1[] = new char[fis1.available()];
+				is1.read(input1);
+				is1.close();
+				fis1.close();
+				BlueToothAddress = new String(input1);
+				startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
+			} catch (FileNotFoundException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+		}
         
-       startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
+       
        
         Fragment contentFragment1 = new Home();			   //直接默认启动Home Page
 		FragmentManager fm1 = getFragmentManager();
@@ -146,7 +205,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		list.add(new ContentModel(R.drawable.chat, "详细数据"));
 		list.add(new ContentModel(R.drawable.scan, "二维码扫描"));
 		list.add(new ContentModel(R.drawable.search, "公司主页"));
-		list.add(new ContentModel(R.drawable.temp, "预留"));
+		list.add(new ContentModel(R.drawable.temp, "重置地址"));
 	}
 	
 	
@@ -157,7 +216,37 @@ public class MainActivity extends Activity implements OnItemClickListener{
 //		Toast.makeText(mContext, "address", Toast.LENGTH_SHORT);
 		if (resultCode==Activity.RESULT_OK) {
 			String result = data.getExtras().getString("result");
-			Toast.makeText(this, result, 1).show();
+			if (result.substring(0,2).equals("Qr")&&result.substring(4, 5).equals(":")) {
+				qrReady = true;
+				BlueToothAddress = result.substring(2);
+				serviceOrCilent=ServerOrCilent.CILENT;
+				startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
+				Toast.makeText(this, "地址成功获取", Toast.LENGTH_SHORT).show();
+//				publicMethod.writeToTxt(mContext,"BlueToothAddress.txt" , "BlueToothAddress.txt");
+				FileOutputStream fos1;
+				try {
+					fos1 = mContext.openFileOutput("BlueToothAddress.txt",Context.MODE_PRIVATE );
+					OutputStreamWriter osw1 = new OutputStreamWriter(fos1, "UTF-8");
+					osw1.write(BlueToothAddress);
+					osw1.flush();
+					fos1.flush();
+					osw1.close();
+					fos1.close();
+				} catch (FileNotFoundException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+			}
+			else {
+				qrReady = false;	
+				Toast.makeText(this, "非蓝牙地址", 1).show();
+			}
 		}
 	}
 	
@@ -256,6 +345,13 @@ public class MainActivity extends Activity implements OnItemClickListener{
 			intent.setData(uri);
 			startActivity(intent);
 			break;
+		case 5:
+			String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
+			File addressFile = new File(pathString);
+			if (addressFile.exists()) {
+				addressFile.delete();
+				Toast.makeText(mContext, "已经删除", Toast.LENGTH_LONG);
+			}
 			
 		}
 

@@ -8,11 +8,17 @@ import java.net.Socket;
 import java.util.UUID;
 
 import com.example.smartcup.chatActivity;
+import com.example.smartcup.MainActivity.ServerOrCilent;
 import com.example.smartcup.chatActivity.deviceListItem;
+import com.zxing.activity.CaptureActivity;
 
+import android.app.AlertDialog;
 import android.app.Service;
+import android.app.AlertDialog.Builder;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,9 +31,18 @@ public class ReceiveService extends Service {
 
 	private static clientThread clientConnectThread = null;
 	readThread mreadThread = null;;
-	
+	Context mContext;
 	PublicMethod publicMethod =  new PublicMethod();
 	
+	
+	@Override
+	public void onCreate() {
+		// TODO 自动生成的方法存根
+	
+		super.onCreate();
+		mContext = this;
+
+	}
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO 自动生成的方法存根
@@ -45,10 +60,11 @@ public class ReceiveService extends Service {
 				System.out.println(chatActivity.address);
 				if (chatActivity.remoteDevice.getBondState() == BluetoothDevice.BOND_NONE) {
 					pair(chatActivity.address, "1234");
-					Message msg2 = new Message();
-					msg2.obj = "自动配对成功,请稍等";
-					msg2.what = 0;
-					chatActivity.LinkDetectedHandler.sendMessage(msg2);
+//					Message msg2 = new Message();                //0000000000000000000000
+//					msg2.obj = "自动配对成功,请稍等";
+//					msg2.what = 0;
+//					chatActivity.LinkDetectedHandler.sendMessage(msg2);
+//					Toast.makeText(this,"自动配对成功,请稍等" , Toast.LENGTH_LONG);
 				} else if (chatActivity.remoteDevice.getBondState() == BluetoothDevice.BOND_BONDED) {
 					clientConnectThread = new clientThread();
 					clientConnectThread.start();
@@ -83,24 +99,29 @@ public class ReceiveService extends Service {
 					chatActivity.socket = chatActivity.remoteDevice.createRfcommSocketToServiceRecord(UUID
 							.fromString("00001101-0000-1000-8000-00805F9B34FB"));
 					// 连接
-					Message msg2 = new Message();
-					msg2.obj = "请稍候，正在连  接服务器:" + MainActivity.BlueToothAddress;
-					msg2.what = 0;
-					chatActivity.LinkDetectedHandler.sendMessage(msg2);
+//					Message msg2 = new Message();                  //00000000000000000000000000000000
+//					msg2.obj = "请稍候，正在连  接服务器:" + MainActivity.BlueToothAddress;
+//					msg2.what = 0;
+//					chatActivity.LinkDetectedHandler.sendMessage(msg2);
+//					Toast.makeText(mContext,"正在连接水杯", Toast.LENGTH_LONG);
 					chatActivity.socket.connect();
-					Message msg = new Message();
-					msg.obj = "已经连接上服务端！可以发送信息。";
-					msg.what = 0;
-					chatActivity.LinkDetectedHandler.sendMessage(msg);
+//					Message msg = new Message();                 //000000000000000000000000000000000
+//					msg.obj = "已经连接上服务端！可以发送信息。";
+//					msg.what = 0;
+//					chatActivity.LinkDetectedHandler.sendMessage(msg);
+//					Toast.makeText(mContext, "已经连接上水杯，准备接收", Toast.LENGTH_LONG);
 					// 启动接受数据
 					mreadThread = new readThread();
 					mreadThread.start();
 				} catch (Exception e) {
 					Log.e("connect", "", e);
-					Message msg = new Message();
-					msg.obj = "连接服务端异常！断开连接重新试一试。";
-					msg.what = 0;
-					chatActivity.LinkDetectedHandler.sendMessage(msg);
+//					Message msg = new Message();                       //0000000000000000000000000000
+//					msg.obj = "连接服务端异常！断开连接重新试一试。";
+//					msg.what = 0;
+//					chatActivity.LinkDetectedHandler.sendMessage(msg);
+					
+
+//					Toast.makeText(mContext, "水杯端连接异常，无法连接", Toast.LENGTH_LONG);
 				}
 			}
 		};
@@ -158,7 +179,7 @@ public class ReceiveService extends Service {
 //								String temp = publicMethod.readFromTxt(getApplicationContext(), "test.txt");
 								msg.obj = s;
 								msg.what = 0;
-								chatActivity.LinkDetectedHandler.sendMessage(msg);
+//								chatActivity.LinkDetectedHandler.sendMessage(msg);
 						}
 					} catch (IOException e) {
 						try {
