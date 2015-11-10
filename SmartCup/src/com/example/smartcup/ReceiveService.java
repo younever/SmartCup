@@ -33,7 +33,8 @@ public class ReceiveService extends Service {
 	readThread mreadThread = null;;
 	Context mContext;
 	PublicMethod publicMethod =  new PublicMethod();
-	
+	int reConnect = 0;
+	int firstConnect = 0;
 	
 	@Override
 	public void onCreate() {
@@ -90,42 +91,90 @@ public class ReceiveService extends Service {
 	// 开启客户端
 		private class clientThread extends Thread {
 			public void run() {
-				try {
+				while(firstConnect==0)
+				{
+					try {
+						System.out.println("匹配");
+						// 创建一个Socket连接：只需要服务器在注册时的UUID号
+						// socket =
+						// device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
+						chatActivity.socket = chatActivity.remoteDevice.createRfcommSocketToServiceRecord(UUID
+								.fromString("00001101-0000-1000-8000-00805F9B34FB"));
+						Log.d("mylog", "正在连接水杯");
+						chatActivity.socket.connect();
+						firstConnect = 1;
+						// 启动接受数据
+						mreadThread = new readThread();
+						mreadThread.start();
+					} catch (Exception e) {
+//						Log.e("connect", "", e);
+						Log.e("errorConnect", "连接服务端异常！断开连接重新试一试。");
+						firstConnect = 0;
 
-					System.out.println("匹配");
-					// 创建一个Socket连接：只需要服务器在注册时的UUID号
-					// socket =
-					// device.createRfcommSocketToServiceRecord(BluetoothProtocols.OBEX_OBJECT_PUSH_PROTOCOL_UUID);
-					chatActivity.socket = chatActivity.remoteDevice.createRfcommSocketToServiceRecord(UUID
-							.fromString("00001101-0000-1000-8000-00805F9B34FB"));
-					// 连接
-//					Message msg2 = new Message();                  //00000000000000000000000000000000
-//					msg2.obj = "请稍候，正在连  接服务器:" + MainActivity.BlueToothAddress;
-//					msg2.what = 0;
-//					chatActivity.LinkDetectedHandler.sendMessage(msg2);
-//					Toast.makeText(mContext,"正在连接水杯", Toast.LENGTH_LONG);
-					chatActivity.socket.connect();
-//					Message msg = new Message();                 //000000000000000000000000000000000
-//					msg.obj = "已经连接上服务端！可以发送信息。";
-//					msg.what = 0;
-//					chatActivity.LinkDetectedHandler.sendMessage(msg);
-//					Toast.makeText(mContext, "已经连接上水杯，准备接收", Toast.LENGTH_LONG);
-					// 启动接受数据
-					mreadThread = new readThread();
-					mreadThread.start();
-				} catch (Exception e) {
-					Log.e("connect", "", e);
-//					Message msg = new Message();                       //0000000000000000000000000000
-//					msg.obj = "连接服务端异常！断开连接重新试一试。";
-//					msg.what = 0;
-//					chatActivity.LinkDetectedHandler.sendMessage(msg);
+//						Toast.makeText(mContext, "水杯端连接异常，无法连接", Toast.LENGTH_LONG);
+					}
 					
-
-//					Toast.makeText(mContext, "水杯端连接异常，无法连接", Toast.LENGTH_LONG);
 				}
+				
 			}
 		};
 		
+
+		// 读取数据
+		public class readThread extends Thread {
+			public void run() {
+
+				byte[] buffer = new byte[1024];
+				int bytes;
+				InputStream mmInStream = null;
+
+				try {
+					mmInStream = chatActivity.socket.getInputStream();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					
+					e1.printStackTrace();
+				}
+
+					while (true) {
+						Log.d("mylog", "接受到数据");
+						if (reConnect ==1) {
+							try {
+								chatActivity.socket.connect();
+								reConnect = 0;
+							} catch (IOException e) {
+								// TODO 自动生成的 catch 块
+								reConnect = 1;
+								e.printStackTrace();
+							}
+						}
+
+						try {
+								if ((bytes = mmInStream.read(buffer)) > 0) {
+									byte[] buf_data = new byte[bytes];
+									for (int i = 0; i < bytes; i++) {
+										buf_data[i] = buffer[i];
+									}
+									String s = new String(buf_data);
+									Message msg = new Message();		
+									publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
+	//								String temp = publicMethod.readFromTxt(getApplicationContext(), "test.txt");
+									msg.obj = s;
+									msg.what = 0;
+	//								chatActivity.LinkDetectedHandler.sendMessage(msg);
+							}
+						} catch (IOException e) {
+							Log.e("mylog", "远程服务器断开");
+							reConnect = 1;
+//								mmInStream.close();
+						}
+					}
+				
+					
+				
+			}
+		}
+
 		/* 停止客户端连接 */
 		public  void shutdownClient() {
 			new Thread() {
@@ -151,49 +200,8 @@ public class ReceiveService extends Service {
 			}.start();
 		}
 		
-		// 读取数据
-		public class readThread extends Thread {
-			public void run() {
-
-				byte[] buffer = new byte[1024];
-				int bytes;
-				InputStream mmInStream = null;
-
-				try {
-					mmInStream = chatActivity.socket.getInputStream();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					
-					e1.printStackTrace();
-				}
-				while (true) {
-					try {
-							if ((bytes = mmInStream.read(buffer)) > 0) {
-								byte[] buf_data = new byte[bytes];
-								for (int i = 0; i < bytes; i++) {
-									buf_data[i] = buffer[i];
-								}
-								String s = new String(buf_data);
-								Message msg = new Message();		
-								publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
-//								String temp = publicMethod.readFromTxt(getApplicationContext(), "test.txt");
-								msg.obj = s;
-								msg.what = 0;
-//								chatActivity.LinkDetectedHandler.sendMessage(msg);
-						}
-					} catch (IOException e) {
-						try {
-							mmInStream.close();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						break;
-					}
-				}
-			}
-		}
-
+		
+		
 		public static boolean pair(String strAddr, String strPsw)
 		{
 			boolean result = false;
@@ -229,6 +237,7 @@ public class ReceiveService extends Service {
 					Log.d("mylog", "setPiN failed!");
 					e.printStackTrace();
 				} //
+				
 			}
 			else
 			{
