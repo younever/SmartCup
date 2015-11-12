@@ -4,6 +4,7 @@ package com.example.smartcup;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ import com.example.smartcup.MainActivity.ServerOrCilent;
 import com.example.smartcup.chatActivity.deviceListItem;
 import com.zxing.activity.CaptureActivity;
 
+import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.app.AlertDialog.Builder;
@@ -136,43 +138,88 @@ public class ReceiveService extends Service {
 					e1.printStackTrace();
 				}
 
-					while (true) {
-						Log.d("mylog", "接受到数据");
-						if (reConnect ==1) {
-							try {
-								chatActivity.socket.connect();
-								reConnect = 0;
-							} catch (IOException e) {
-								// TODO 自动生成的 catch 块
-								reConnect = 1;
-								e.printStackTrace();
-							}
-						}
-
+				while (true) {
+					if (reConnect ==1) {
 						try {
-								if ((bytes = mmInStream.read(buffer)) > 0) {
-									byte[] buf_data = new byte[bytes];
-									for (int i = 0; i < bytes; i++) {
-										buf_data[i] = buffer[i];
-									}
-									String s = new String(buf_data);
-									Message msg = new Message();		
-									publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
-	//								String temp = publicMethod.readFromTxt(getApplicationContext(), "test.txt");
-									msg.obj = s;
-									msg.what = 0;
-	//								chatActivity.LinkDetectedHandler.sendMessage(msg);
-							}
+							chatActivity.socket.connect();
+							reConnect = 0;
 						} catch (IOException e) {
-							Log.e("mylog", "远程服务器断开");
+							// TODO 自动生成的 catch 块
 							reConnect = 1;
-//								mmInStream.close();
+							e.printStackTrace();
 						}
 					}
-				
-					
-				
+
+					try {
+						if ((bytes = mmInStream.read(buffer)) > 0) {
+							Log.d("mylog", "接受到数据");
+							byte[] buf_data = new byte[bytes];
+							for (int i = 0; i < bytes; i++) {
+								buf_data[i] = buffer[i];
+							}
+							String s = new String(buf_data);
+							int year = publicMethod.getYear();
+							int date = publicMethod.getDate();
+							int month = publicMethod.getMonth();
+							int hour = publicMethod.getHour();
+							if(s.length()>6)
+							{
+								switch (s.substring(0, 6)) {
+								case "TTTTTT":                       //T1234T 是蓝牙发送过来的关于温度的标志位
+									publicMethod.writeToTxt(getApplicationContext(),"Temperture"+hour+".txt" , s.substring(6));
+									sendMessageHandle("Temperature");
+									break;
+								case "PPPPPP":						//P4321P 是蓝牙模块发送过来关于饮品种类的标志位
+									publicMethod.writeToTxt(getApplicationContext(), "Type"+hour+".txt", s.substring(6));
+									sendMessageHandle("Type");
+									break;
+								case "DDDDDD":						//D5678D 是蓝牙模块发送过来关于当前喝水量的标志位
+									String waterDrinkedString = publicMethod.readFromTxt(mContext, "Drinked"+date+".txt");
+//									Log.e("test", "00000000000000000000000000");
+									int waterDrinkedInt  = Integer.valueOf(waterDrinkedString).intValue();
+									int waterDrinkingInt = Integer.valueOf(s.substring(6)).intValue()+waterDrinkedInt;
+									publicMethod.writeToTxt(getApplicationContext(), "Drinked"+date+".txt", ""+waterDrinkingInt);
+//									Log.e("test", "1111111111111111111111111111");
+									sendMessageHandle("Drink");
+									break;
+								default:
+									sendMessageHandle("错误数据，请重传");
+									break;
+									
+								}	
+							}
+							else {
+								sendMessageHandle("错误数据，请重传");
+							}
+							
+//							publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
+
+						}
+					} catch (IOException e) {
+						Log.e("mylog", "远程服务器断开");
+						reConnect = 1;
+//								mmInStream.close();
+					}
+				}
 			}
+		}
+		
+		// 发送数据
+		private void sendMessageHandle(String msg) {
+			if (chatActivity.socket == null) {
+				Toast.makeText(mContext, "没有连接", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			try {
+				OutputStream os = chatActivity.socket.getOutputStream();
+				os.write(msg.getBytes());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+//			list.add(new deviceListItem(msg, false));
+//			mAdapter.notifyDataSetChanged();
+//			mListView.setSelection(list.size() - 1);
 		}
 
 		/* 停止客户端连接 */

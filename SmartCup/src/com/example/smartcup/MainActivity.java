@@ -30,6 +30,8 @@ import java.util.TimerTask;
 
 
 
+
+
 import com.example.smartcup.ContentModel;
 import com.example.smartcup.R;
 import com.example.smartcup.R.style;
@@ -41,6 +43,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.ClipData.Item;
+import android.content.Loader.ForceLoadContentObserver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,6 +60,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -92,11 +96,10 @@ public class MainActivity extends Activity implements OnItemClickListener{
     private List<ContentModel> list;
     private ContentAdapter adapter2;
     private static Boolean isExit = false;
-    private long exitTime = 0;
-	private Object activity;
+    private Object activity;
 	private boolean qrReady=false;
 
-	PublicMethod publicMethod;
+	public PublicMethod publicMethod;
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,10 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		getActionBar().setDisplayShowHomeEnabled(false);
 		getActionBar().setBackgroundDrawable(this.getBaseContext().getResources().getDrawable(R.drawable.BackBar));
         getActionBar().show();
+        
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_main);
 		mContext = this;
@@ -137,15 +144,17 @@ public class MainActivity extends Activity implements OnItemClickListener{
         	}
         }; 
        
-      
+        initTxt();
+		
         String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
 		File addressFile = new File(pathString);
 		if (!addressFile.exists()) {
+			
 			Builder ConnetDialog = new AlertDialog.Builder(this);
 			ConnetDialog.setTitle("SmartCup");
 			ConnetDialog.setMessage("是否进行二维码连接");
 			ConnetDialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
-				
+		
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					// TODO 自动生成的方法存根
@@ -208,7 +217,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		list.add(new ContentModel(R.drawable.temp, "重置地址"));
 	}
 	
-	
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -387,5 +396,63 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		 System.exit(0);
 	 }
 	}
+	private void initTxt(){
+		for (int i = 0; i < 24; i++) {
+			FileOutputStream fos1;
+			FileOutputStream fos2;
+			try {
+				fos1 = mContext.openFileOutput("Type"+i+".txt",Context.MODE_PRIVATE );
+				fos2 = mContext.openFileOutput("Temperture"+i+".txt", Context.MODE_PRIVATE);
+				OutputStreamWriter osw1 = new OutputStreamWriter(fos1, "UTF-8");
+				OutputStreamWriter osw2 = new OutputStreamWriter(fos2,"UTF-8");
+				osw1.write("0");
+				osw1.flush();
+				fos1.flush();
+				osw1.close();
+				fos1.close();
+				osw2.write("0");
+				osw2.flush();
+				fos2.flush();
+				osw2.close();
+				fos2.close();
+			} catch (FileNotFoundException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+			
+//			publicMethod.writeToTxt(mContext, "Type"+i+".txt", "0");
+//			publicMethod.writeToTxt(mContext, "Temperture"+i+".txt", "0");
+		}
+		for (int t = 0; t < 31; t++) {
+//			publicMethod.writeToTxt(mContext, "Drink"+t+".txt", "0");
+			FileOutputStream fos3;
+			try {
+				fos3 = mContext.openFileOutput("Drinked"+t+".txt",Context.MODE_PRIVATE );
+				OutputStreamWriter osw3 = new OutputStreamWriter(fos3, "UTF-8");
+				osw3.write("0");
+				osw3.flush();
+				fos3.flush();
+				osw3.close();
+				fos3.close();
+			} catch (FileNotFoundException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (UnsupportedEncodingException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO 自动生成的 catch 块
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	
 	
 }

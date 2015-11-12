@@ -11,11 +11,14 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.example.smartcup.R;
-
 import android.app.Fragment;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
+import android.os.FileObserver;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,19 +29,96 @@ import android.widget.TextView;
 public class Week extends Fragment {
 	
 	LinearLayout layout;
+	private FileObserver mFileObserver;
 	private GraphicalView mChartView; //显示图表
-	PublicMethod pMethod = new PublicMethod();
-	TextView textView;
+	static PublicMethod pMethod = new PublicMethod();
+	static TextView textView_d;
+	static GetTxtThread_d showThread_d;
+	private static boolean updateflag;
+	static Context mContext;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO 自动生成的方法存根
+		super.onCreate(savedInstanceState);
+		mContext = getActivity();
+	}
 	@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
         View contactsLayout = inflater.inflate(R.layout.week,  
                 container, false);  
-        mChartView = draGraphicalViewDrink();
+        if (null == mFileObserver) {
+			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
+			mFileObserver.startWatching();
+        }
+        
+        
         layout = (LinearLayout) contactsLayout.findViewById(R.id.tem2);
-        layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        textView_d = (TextView) contactsLayout.findViewById(R.id.drink);
+        int date = pMethod.getDate();
+        String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
+    	textView_d.setText(drink+" ml"); 
+    	mChartView = draGraphicalViewDrink();
+    	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        showThread_d = new GetTxtThread_d();
+        showThread_d.start();
         return contactsLayout;  
     } 
+	
+	public static class GetTxtThread_d extends Thread{
+		public void run(){
+			while(true)
+			{
+				synchronized (showThread_d) {
+					if(updateflag)
+					{
+//						showThread.sleep(100);
+						updateflag = false;
+						Message msg = new Message();
+						msg.what = 1;
+						handler.sendMessage(msg);
+					}
+				}
+			}
+		}
+		
+	}
+	static class InFilesObserver extends FileObserver{
+		
+		public InFilesObserver(String path,int mask)
+		{
+			super(path,mask);
+		}
+		public InFilesObserver (String path) {
+			super(path);
+		}
+		@Override
+		public void onEvent(int event, String path) {
+			// TODO 自动生成的方法存根
+			final int action = event&FileObserver.ALL_EVENTS;
+			switch (action) {
+			case FileObserver.MODIFY:
+				updateflag = true;
+				break;
+			default:
+				break;
+			}
+			
+		}
+	}
+	
+	private static Handler handler = new Handler() {  
+        @Override  
+        public void handleMessage(Message msg) {  
+        	int date = pMethod.getDate();
+            if (msg.what == 1) {  
+            	String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
+            	textView_d.setText(drink+" ml");            	
+            }  
+        }  
+    }; 
+	
 
 	private GraphicalView draGraphicalViewDrink(){
 		GraphicalView mChartView;

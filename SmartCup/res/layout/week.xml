@@ -27,7 +27,7 @@
 	        <ImageView
 	            android:id="@+id/drinkpic"
 	            android:layout_width="90dip"
-	            android:layout_height="60dip"
+	            android:layout_height="40dip"
 	            android:layout_alignParentBottom="true"
 	            android:layout_centerHorizontal="true"
 	            android:src="@drawable/waternum1" />

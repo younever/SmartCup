@@ -1,12 +1,6 @@
 package com.example.smartcup;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+
 import java.util.Random;
 
 import org.achartengine.ChartFactory;
@@ -14,29 +8,23 @@ import org.achartengine.GraphicalView;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.example.smartcup.R;
 
-import android.Manifest.permission;
-import android.R.layout;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.AvoidXfermode.Mode;
 import android.graphics.Paint.Align;
 import android.os.Bundle;
 import android.os.FileObserver;
-import android.text.format.Time;
-import android.text.style.SuperscriptSpan;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,20 +32,100 @@ public class Today extends Fragment {
 	
 	LinearLayout layout;
 	private GraphicalView mChartView; //显示图表
-	PublicMethod pMethod = new PublicMethod();
+	static PublicMethod pMethod = new PublicMethod();
 	String date[];
+	static TextView textView_t;
+	static GetTxtThread_t showThread_t;
+	public static boolean updateflag;
+	private FileObserver mFileObserver;
+	static Context mContext ;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO 自动生成的方法存根
+		super.onCreate(savedInstanceState);
+		mContext = getActivity();
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
         View todayData = inflater.inflate(R.layout.today, container, false);  
         
 //        FileObserver mFileObserver = new 
-        
+        textView_t = (TextView) todayData.findViewById(R.id.textView2);
+        int date = pMethod.getDate();
+        String drink = pMethod.readFromTxt(mContext,"Temperture"+date+".txt");
+    	textView_t.setText(drink+"°C"); 
+        if (null == mFileObserver) {
+			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
+			mFileObserver.startWatching();
+        }
         mChartView = drawGraphicalViewTemperture();
         layout = (LinearLayout) todayData.findViewById(R.id.tem1);
-        layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));;
+        layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        
+        showThread_t = new GetTxtThread_t();
+        showThread_t.start();
+        
         return todayData;  
     }
+	
+	
+static class InFilesObserver extends FileObserver{
+		
+		public InFilesObserver(String path,int mask)
+		{
+			super(path,mask);
+		}
+		public InFilesObserver (String path) {
+			super(path);
+		}
+		@Override
+		public void onEvent(int event, String path) {
+			// TODO 自动生成的方法存根
+			final int action = event&FileObserver.ALL_EVENTS;
+			switch (action) {
+			case FileObserver.MODIFY:
+				updateflag = true;
+				break;
+			default:
+				break;
+			}
+			
+		}
+	}
+	
+	public static class GetTxtThread_t extends Thread{
+		public void run(){
+			while(true)
+			{
+				synchronized (showThread_t) {
+					if(updateflag)
+					{
+//						showThread.sleep(100);
+						updateflag = false;
+						Message msg = new Message();
+						msg.what = 1;
+						handler.sendMessage(msg);
+					}
+				}
+			}
+		}
+		
+	}
+	
+    private static Handler handler = new Handler() {  
+        @Override  
+        public void handleMessage(Message msg) {  
+        	int hour = pMethod.getHour();
+            if (msg.what == 1) {  
+            	String temperture = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
+            	textView_t.setText(temperture+"°C");
+            	
+            }  
+        }  
+    }; 
+   
 
 	private GraphicalView drawGraphicalViewTemperture()
 	{

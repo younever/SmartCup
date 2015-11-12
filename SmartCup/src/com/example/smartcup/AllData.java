@@ -31,13 +31,15 @@ import android.widget.TextView;
 
 public class AllData extends Fragment {
 	
-	private FileObserver mFileObserver;
+	
 	LinearLayout layout;
 	private GraphicalView mChartView; //显示图表
 	static PublicMethod pMethod = new PublicMethod();
-	public static TextView textView;
+	public static TextView textView_en;
+	public static TextView textView_cn;
 	static GetTxtThread showThread;
 	public static boolean updateflag;
+	private FileObserver mFileObserver;
 	static Context mContext ;
 	
 	@Override
@@ -51,13 +53,15 @@ public class AllData extends Fragment {
             Bundle savedInstanceState) {  
         View newsLayout = inflater.inflate(R.layout.alldata, container,  
                 false);  
-        pMethod.writeToTxt(getActivity(), "test.txt", "ORANGE"); ///初始化
+//        pMethod.writeToTxt(getActivity(), "Type"+pMethod.getHour()+".txt", "apple"); ///初始化
         if (null == mFileObserver) {
 			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
 			mFileObserver.startWatching();
         }
         
-        textView = (TextView) newsLayout.findViewById(R.id.textView1);
+        textView_en = (TextView) newsLayout.findViewById(R.id.textView1);
+        textView_cn = (TextView) newsLayout.findViewById(R.id.textView2);
+        showInit();
         mChartView = draGraphicalViewType();
         layout = (LinearLayout) newsLayout.findViewById(R.id.tem3);
         layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
@@ -71,13 +75,6 @@ public class AllData extends Fragment {
 	public void onDestroy() {
 		if(null != mFileObserver) mFileObserver.stopWatching();
 	}
-	
-//	@Override
-//	public void onPause() {
-//		// TODO 自动生成的方法存根
-//		super.onPause();
-//		showThread.stop();;
-//	}
 	
 	static class InFilesObserver extends FileObserver{
 		
@@ -105,7 +102,6 @@ public class AllData extends Fragment {
 	
 	public static class GetTxtThread extends Thread{
 		public void run(){
-			
 			while(true)
 			{
 				synchronized (showThread) {
@@ -116,10 +112,8 @@ public class AllData extends Fragment {
 						Message msg = new Message();
 						msg.what = 1;
 						handler.sendMessage(msg);
-						
 					}
 				}
-				
 			}
 		}
 		
@@ -128,13 +122,74 @@ public class AllData extends Fragment {
     private static Handler handler = new Handler() {  
         @Override  
         public void handleMessage(Message msg) {  
+        	int hour = pMethod.getHour();
             if (msg.what == 1) {  
-            	String temp = pMethod.readFromTxt(mContext,"test.txt");
-				textView.setText(temp);
+            	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");
+            	switch (type) {
+				case "ORANGE":
+				case "orange":
+					textView_en.setText("ORANGE");
+					textView_cn.setText("新鲜橙汁");
+					break;
+				case "APPLE":
+				case "apple":
+					textView_en.setText("APPLE JUICE");
+					textView_cn.setText("新鲜苹果汁");
+					break;
+				case "TEA":
+				case "tea":
+					textView_en.setText("TEA");
+					textView_cn.setText("茶");
+					break;
+				case "coffee":
+				case "COFFEE":
+					textView_en.setText("COFFEE");
+					textView_cn.setText("咖啡");
+					break;
+				case "COCACOLA":
+				case "cocacola":
+					textView_en.setText("COCACOLA");
+					textView_cn.setText("可口可乐");
+				default:
+					break;
+				}
+            	
             }  
         }  
     }; 
     
+    private void showInit(){
+    	int hour = pMethod.getHour();
+    	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");
+    	switch (type) {
+		case "ORANGE":
+		case "orange":
+			textView_en.setText("ORANGE");
+			textView_cn.setText("新鲜橙汁");
+			break;
+		case "APPLE":
+		case "apple":
+			textView_en.setText("APPLE JUICE");
+			textView_cn.setText("新鲜苹果汁");
+			break;
+		case "TEA":
+		case "tea":
+			textView_en.setText("TEA");
+			textView_cn.setText("茶");
+			break;
+		case "coffee":
+		case "COFFEE":
+			textView_en.setText("COFFEE");
+			textView_cn.setText("咖啡");
+			break;
+		case "COCACOLA":
+		case "cocacola":
+			textView_en.setText("COCACOLA");
+			textView_cn.setText("可口可乐");
+		default:
+			break;
+		}
+    }
 
 	
 	private GraphicalView draGraphicalViewType(){
