@@ -147,7 +147,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
         		super.onDrawerOpened(drawerView);
         		getActionBar().setTitle("请选择");
         		invalidateOptionsMenu();  //Call onPrepareOptionsMenu();
-        		
         	}
         	
         	@Override
@@ -159,7 +158,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
         	}
         }; 
        
-        initTxt();
+        
         
        
        
@@ -176,18 +175,12 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	protected void onResume() {
 		// TODO 自动生成的方法存根
 		super.onResume();
-//		 if (null == mFileObserver) { //进行文件的监控，后续版本去掉
-//				mFileObserver = new InFilesObserver(mContext.getFilesDir().getAbsolutePath());
-//				mFileObserver.startWatching();
-//	        }
-//	      showThread = new GetTxtThread();
-//	      showThread.start();
-			
 	        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
 			File addressFile = new File(pathString);
 			if (!addressFile.exists()) {
+				initTxt();
+				Builder ConnetDialog = new AlertDialog.Builder(this,R.style.AlertDialog);
 				
-				Builder ConnetDialog = new AlertDialog.Builder(this);
 				ConnetDialog.setTitle("SmartCup");
 				ConnetDialog.setMessage("是否进行二维码连接");
 				ConnetDialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
@@ -208,8 +201,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 						Toast.makeText(mContext, "请手动添加智能水杯", 1).show();
 					}
 				});
-				ConnetDialog.show();
-			}
+				ConnetDialog.show();			}
 			else {
 				serviceOrCilent=ServerOrCilent.CILENT;
 				try {
@@ -244,47 +236,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		list.add(new ContentModel(R.drawable.search, "公司主页"));
 		list.add(new ContentModel(R.drawable.temp, "重置地址"));
 	}
-	
-//	static class InFilesObserver extends FileObserver{
-//		
-//		public InFilesObserver(String path,int mask)
-//		{
-//			super(path,mask);
-//		}
-//		public InFilesObserver (String path) {
-//			super(path);
-//		}
-//		@Override
-//		public void onEvent(int event, String path) {
-//			// TODO 自动生成的方法存根
-//			final int action = event&FileObserver.ALL_EVENTS;
-//			switch (action) {
-//			case FileObserver.MODIFY:
-////				updateflag = true;
-//				Log.e("test", "0000000000000000");
-////				Week.textView_d.setText("1004");
-////				Message msg = new Message();
-////				msg.what = 1;
-////				handler.sendMessage(msg);
-//				break;
-//			default:
-//				break;
-//			}
-//			
-//		}
-//	}
-//	
-//	private static Handler handler = new Handler() {  
-//        @Override  
-//        public void handleMessage(Message msg) {  
-//        	if(msg.what==1){
-//        		msg.what=0;
-////        		AllData.textView_cn.setText("sssssssss");
-//        		Log.e("test", "22222222222222");
-//        		Toast.makeText(mContext, "dddddd", Toast.LENGTH_SHORT).show();
-//        	}      		
-//        }  
-//    }; 
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -299,7 +250,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 				serviceOrCilent=ServerOrCilent.CILENT;
 				startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
 				Toast.makeText(this, "地址成功获取", Toast.LENGTH_SHORT).show();
-//				publicMethod.writeToTxt(mContext,"BlueToothAddress.txt" , "BlueToothAddress.txt");
+				Toast.makeText(this, "数据初始化", Toast.LENGTH_SHORT).show();
 				FileOutputStream fos1;
 				try {
 					fos1 = mContext.openFileOutput("BlueToothAddress.txt",Context.MODE_PRIVATE );

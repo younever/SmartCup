@@ -220,6 +220,7 @@ public final class R {
     }
     public static final class style {
         public static final int Actionbar=0x7f090004;
+        public static final int AlertDialog=0x7f090005;
         /** 
         Base application theme for API 11+. This theme completely replaces
         AppBaseTheme from res/values/styles.xml on API 11+ devices.

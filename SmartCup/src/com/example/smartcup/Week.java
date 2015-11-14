@@ -1,5 +1,6 @@
 package com.example.smartcup;
 
+import java.io.File;
 import java.util.Random;
 
 import org.achartengine.ChartFactory;
@@ -55,23 +56,26 @@ public class Week extends Fragment {
         textView_d = (TextView) contactsLayout.findViewById(R.id.drink);
         
         int date = pMethod.getDate();
+        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "Drinked"+date+".txt";
+		File file = new File(pathString);
+		if (!file.exists())
+		{
+			pMethod.writeToTxt(mContext, "Drinked"+date+".txt", "0");
+		}
+
         String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
     	textView_d.setText(drink+"ml"); 
         
 		if (null == mFileObserver) {
-        	
         	String path = getActivity().getFilesDir().getAbsolutePath()+"/Drinked"+date+".txt";
 			mFileObserver = new InFilesObserver(path);
 			mFileObserver.startWatching();
 //			Log.d("firsttime", mFileObserver.toString());
         }
-//        String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
-//    	textView_d.setText(drink+" ml"); 
     	mChartView = draGraphicalViewDrink();
     	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-//        showThread_d = new GetTxtThread_d();
-//        showThread_d.start();
-        return contactsLayout;  
+        
+    	return contactsLayout;  
     } 
 	
 	@Override
@@ -143,6 +147,9 @@ public class Week extends Fragment {
             	String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
             	textView_d.setText(drink+" ml");   
             	Log.e("drink", drink);
+            	layout.removeView(mChartView);
+            	mChartView = draGraphicalViewDrink();
+            	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
             }  
         }  
     }; 
@@ -153,27 +160,27 @@ public class Week extends Fragment {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
         
-        int min,max,hour;
-        hour=pMethod.getHour();    //设置坐标轴显示的初始坐标
-        if (hour>=7) {
-			max=hour;
-			min=hour-7;
+        int min,max,monthMax;
+        monthMax=pMethod.getMonthMax();    //设置坐标轴显示的初始坐标
+        if (pMethod.getDate()>=7) {
+			max=pMethod.getDate();
+			min=pMethod.getDate()-7;
 		}
         else {
-			min = 0;
+			min = 1;
 			max = 7;
 		} 
-        Random r = new Random(); //临时数值
-        for(int i=0;i<=24;i++)
-        {
-       	 pMethod.writeToTxt(getActivity(),i+":00.txt",r.nextInt()%100+"");
-        }
+//        Random r = new Random(); //临时数值
+//        for(int i=0;i<=24;i++)
+//        {
+//       	 pMethod.writeToTxt(getActivity(),i+":00.txt",r.nextInt()%100+"");
+//        }
 	    XYSeries series = new XYSeries("");
 	    // 填充数据
-	    for (int k = 0; k <= 24; k++) {
+	    for (int k = 0; k <= pMethod.getMonthMax(); k++) {
 	        // 填x,y值
-	        series.add(k, Double.valueOf(pMethod.readFromTxt(getActivity(), k+":00.txt"))); //20 + r.nextInt() % 100
-	        renderer.addTextLabel(k,k+":00");               
+	        series.add(k, Double.valueOf(pMethod.readFromTxt(getActivity(), "Drinked"+k+".txt"))); //20 + r.nextInt() % 100
+	        renderer.addTextLabel(k,k+"日");               
 	    }
 	    // 需要绘制的点放进dataset中
 	    dataset.addSeries(series);
@@ -188,6 +195,7 @@ public class Week extends Fragment {
         renderer.setYLabels(9);//设置Y轴标签数 
         renderer.setXAxisMin(min);
         renderer.setXAxisMax(max);
+        renderer.setLabelsTextSize(15);
         renderer.setShowLegend(false);
         renderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
         renderer.setZoomEnabled(false,false);

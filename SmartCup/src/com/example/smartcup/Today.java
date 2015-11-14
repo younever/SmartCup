@@ -1,6 +1,7 @@
 package com.example.smartcup;
 
 
+import java.io.File;
 import java.util.Random;
 
 import org.achartengine.ChartFactory;
@@ -52,23 +53,28 @@ public class Today extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
         View todayData = inflater.inflate(R.layout.today, container, false);  
-        
         textView_t = (TextView) todayData.findViewById(R.id.textView2);
-        int hour = pMethod.getHour();
-        String temperature = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
-    	textView_t.setText(temperature+"°C"); 
         
-    	
+        
+        int hour = pMethod.getHour();
+        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "Temperture"+hour+".txt";
+		File file = new File(pathString);
+		if (!file.exists())
+		{
+			pMethod.writeToTxt(mContext, "Temperture"+hour+".txt", "0");
+		}
+        String temperature = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
+    	textView_t.setText(temperature+"°C");         
 		if (null == mFileObserver) {
 //        	int hour = pMethod.getHour();
         	String path = getActivity().getFilesDir().getAbsolutePath()+"/Temperture"+hour+".txt";
 			mFileObserver = new InFilesObserver(path);
 			mFileObserver.startWatching();
         }
-    	
         mChartView = drawGraphicalViewTemperture();
         layout = (LinearLayout) todayData.findViewById(R.id.tem1);
         layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+        
         
 //        showThread_t = new GetTxtThread_t();
 //        showThread_t.start();
@@ -124,8 +130,12 @@ private class InFilesObserver extends FileObserver{
         	int hour = pMethod.getHour();
             if (msg.what == 1) {  
             	String temperture = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
+            	drawGraphicalViewTemperture();
             	textView_t.setText(temperture+"°C");  
             	Log.e("temperature", temperture);
+            	layout.removeView(mChartView);
+                mChartView = drawGraphicalViewTemperture();
+                layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
             }  
         }  
     }; 
@@ -135,26 +145,26 @@ private class InFilesObserver extends FileObserver{
 	{
 		
 		int min,max;
-		int monthMax = pMethod.getMonthMax();
-		if (pMethod.getDate()>=7) {
-			max = pMethod.getDate();
-			min = pMethod.getDate() - 7;
+//		int monthMax = pMethod.getMonthMax();
+		if (pMethod.getHour()>=7) {
+			max = pMethod.getHour();
+			min = pMethod.getHour() - 7;
 		}
 		else {
 			max = 7;
-			min = 1;
+			min = 0;
 		}
 		GraphicalView mChartView;
 		XYMultipleSeriesRenderer rendererT = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset datasetT = new XYMultipleSeriesDataset();
         XYSeries seriesT = new XYSeries("");
-        Random r2= new Random();
-        for (int i = 1; i <= monthMax; i++) {
-        	pMethod.writeToTxt(getActivity(), i+"日.txt",r2.nextInt()%100+""); //
-		}
-        for (int i = 1; i <= monthMax; i++) {
-			seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(), i+"日.txt")));
-			rendererT.addTextLabel(i, i+"日");
+//        Random r2= new Random();
+//        for (int i = 1; i <= monthMax; i++) {
+//        	pMethod.writeToTxt(getActivity(), i+"日.txt",r2.nextInt()%100+""); //
+//		}
+        for (int i = 0; i < 24; i++) {
+			seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(),"Temperture"+i+".txt")));
+			rendererT.addTextLabel(i, i+":00");
 		}
         datasetT.addSeries(seriesT);
         XYSeriesRenderer xyRendererT =  new XYSeriesRenderer();

@@ -35,7 +35,7 @@ public class StartActivity extends Activity {
 		startActivity(it);
 		finish();
 		}
-		}, 100);
+		}, 1500);
 		
 	}
 }

@@ -181,6 +181,7 @@ int string hello_world 0x7f070002
 int string message_send 0x7f070009
 int string title_activity_test 0x7f070006
 int style Actionbar 0x7f090004
+int style AlertDialog 0x7f090005
 int style AppBaseTheme 0x7f090001
 int style AppTheme 0x7f090002
 int style CustomWindowTitleBackground 0x7f090000

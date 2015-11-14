@@ -55,24 +55,27 @@ public class AllData extends Fragment {
             Bundle savedInstanceState) {  
         View newsLayout = inflater.inflate(R.layout.alldata, container,  
                 false);  
-//        pMethod.writeToTxt(getActivity(), "Type"+pMethod.getHour()+".txt", "apple"); ///初始化
-        int hour = pMethod.getHour();
-        Log.d("test", "onCreatView");
+        textView_en = (TextView) newsLayout.findViewById(R.id.textView1);
+        textView_cn = (TextView) newsLayout.findViewById(R.id.textView2);
         
+        int hour = pMethod.getHour();
+        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "Type"+hour+".txt";
+		File file = new File(pathString);
+		if (!file.exists())
+		{
+			pMethod.writeToTxt(mContext, "Type"+hour+".txt", "未知");
+		}
+		showInit();
         if (null == mFileObserver) {
-        	
         	String path = getActivity().getFilesDir().getAbsolutePath()+"/Type"+hour+".txt";
 			mFileObserver = new InFilesObserver(path);
 			mFileObserver.startWatching();
         }
-        textView_en = (TextView) newsLayout.findViewById(R.id.textView1);
-        textView_cn = (TextView) newsLayout.findViewById(R.id.textView2);
-        showInit();
+        
+        
         mChartView = draGraphicalViewType();
         layout = (LinearLayout) newsLayout.findViewById(R.id.tem3);
         layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-//        showThread = new GetTxtThread();
-//        showThread.start();
 //        
         return newsLayout;  
     } 
@@ -155,15 +158,21 @@ public class AllData extends Fragment {
 				case "cocacola":
 					textView_en.setText("COCACOLA");
 					textView_cn.setText("可口可乐");
+					break;
 				default:
+					textView_en.setText("Unknown");
+					textView_cn.setText("未知饮品");
 					break;
 				}
-            	
+            	layout.removeView(mChartView);
+            	mChartView = draGraphicalViewType();
+                layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
             }  
         }  
     }; 
 //    
     private void showInit(){
+    	
     	int hour = pMethod.getHour();
     	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");
     	switch (type) {
@@ -191,7 +200,10 @@ public class AllData extends Fragment {
 		case "cocacola":
 			textView_en.setText("COCACOLA");
 			textView_cn.setText("可口可乐");
+			break;
 		default:
+			textView_en.setText("Unknown");
+			textView_cn.setText("未知饮品");
 			break;
 		}
     }
@@ -212,17 +224,38 @@ public class AllData extends Fragment {
 			min = 0;
 			max = 7;
 		} 
-        Random r = new Random(); //临时数值
-        for(int i=0;i<=24;i++)
-        {
-       	 pMethod.writeToTxt(getActivity(),i+":11.txt",r.nextInt()%100+"");
-        }
 	    XYSeries series = new XYSeries("");
 	    // 填充数据
-	    for (int k = 0; k <= 24; k++) {
+	    int Calorie;
+	    for (int k = 0; k < 24; k++) {
 	        // 填x,y值
-	        series.add(k, Double.valueOf(pMethod.readFromTxt(getActivity(), k+":11.txt"))); //20 + r.nextInt() % 100
-	        renderer.addTextLabel(k,k+":11");               
+	    	switch (pMethod.readFromTxt(getActivity(), "Type"+k+".txt")) {
+			case "TEA":
+			case "tea":
+				Calorie = 100;
+				break;
+			case "APPLE":
+			case "apple":
+				Calorie = 60;
+				break;
+			case "COCACOLA":
+			case "cocacola":
+				Calorie = 80;
+				break;
+			case "COFFEE":
+			case "coffee":
+				Calorie = 120;
+				break;
+			case "ORANGE":
+			case "orange":
+				Calorie = 20;
+				break;
+			default:
+				Calorie = 0;
+				break;
+			}
+	        series.add(k, Calorie); //20 + r.nextInt() % 100
+	        renderer.addTextLabel(k,k+":00");               
 	    }
 	    // 需要绘制的点放进dataset中
 	    dataset.addSeries(series);
@@ -237,6 +270,7 @@ public class AllData extends Fragment {
         renderer.setYLabels(9);//设置Y轴标签数 
         renderer.setXAxisMin(min);
         renderer.setXAxisMax(max);
+        renderer.setLabelsTextSize(15);
         renderer.setShowLegend(false);
         renderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
         renderer.setZoomEnabled(false,false);
