@@ -82,9 +82,7 @@ public class ReceiveService extends Service {
 			//Toast.makeText(mContext, "address is null !",          ////4444444444444
 			//		Toast.LENGTH_SHORT).show();
 		}
-		
-		
-		
+
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
@@ -170,22 +168,39 @@ public class ReceiveService extends Service {
 							if(s.length()>6)
 							{
 								switch (s.substring(0, 6)) {
-								case "TTTTTT":                       //T1234T 是蓝牙发送过来的关于温度的标志位
-									publicMethod.writeToTxt(getApplicationContext(),"Temperture"+hour+".txt" , s.substring(6));
-									sendMessageHandle("Temperature");
+								case "TTTTTT":          //T1234T 是蓝牙发送过来的关于温度的标志位
+									String temperature = s.substring(6);
+									try {
+										double temperatureDoube = Double.valueOf(temperature).doubleValue();
+										if (temperatureDoube>=-40.0&&temperatureDoube<=100.0) {
+											publicMethod.writeToTxt(getApplicationContext(),"Temperture"+hour+".txt" , temperatureDoube+"");
+											sendMessageHandle("Temperature");
+										}
+										else {
+											sendMessageHandle("温度范围错误");
+										}
+									} catch (NumberFormatException e) {
+										// TODO: handle exception
+										sendMessageHandle("温度格式不正确，包含不合法字符");
+									}
+
 									break;
 								case "PPPPPP":						//P4321P 是蓝牙模块发送过来关于饮品种类的标志位
 									publicMethod.writeToTxt(getApplicationContext(), "Type"+hour+".txt", s.substring(6));
 									sendMessageHandle("Type");
 									break;
-								case "DDDDDD":						//D5678D 是蓝牙模块发送过来关于当前喝水量的标志位
-									String waterDrinkedString = publicMethod.readFromTxt(mContext, "Drinked"+date+".txt");
-//									Log.e("test", "00000000000000000000000000");
-									int waterDrinkedInt  = Integer.valueOf(waterDrinkedString).intValue();
-									int waterDrinkingInt = Integer.valueOf(s.substring(6)).intValue()+waterDrinkedInt;
-									publicMethod.writeToTxt(getApplicationContext(), "Drinked"+date+".txt", ""+waterDrinkingInt);
-//									Log.e("test", "1111111111111111111111111111");
-									sendMessageHandle("Drink");
+								case "DDDDDD":	//D5678D 是蓝牙模块发送过来关于当前喝水量的标志位
+									try {
+										String waterDrinkedString = publicMethod.readFromTxt(mContext, "Drinked"+date+".txt");
+										int waterDrinkedInt  = Integer.valueOf(waterDrinkedString).intValue();
+										int waterDrinkingInt = Integer.valueOf(s.substring(6)).intValue()+waterDrinkedInt;
+										publicMethod.writeToTxt(getApplicationContext(), "Drinked"+date+".txt", ""+waterDrinkingInt);
+										sendMessageHandle("Drink");
+									} catch (NumberFormatException e) {
+										// TODO: handle exception
+										sendMessageHandle("喝水量格式不正确，包含不合法字符");
+									}
+									
 									break;
 								default:
 									sendMessageHandle("错误数据，请重传");
@@ -196,9 +211,6 @@ public class ReceiveService extends Service {
 							else {
 								sendMessageHandle("错误数据，请重传");
 							}
-							
-//							publicMethod.writeToTxt(getApplicationContext(), "test.txt", s);
-
 						}
 					} catch (IOException e) {
 						Log.e("mylog", "远程服务器断开");

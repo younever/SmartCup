@@ -15,16 +15,8 @@
 	        android:layout_height="fill_parent"
 	        android:layout_marginBottom="180dip" >
 
-	        <TextView
-	            android:id="@+id/textView1"
-	            android:layout_width="180dip"
-	            android:layout_height="180dip"
-	            android:layout_centerHorizontal="true"
-	            android:layout_marginTop="50dip"
-	            android:background="@drawable/temper"
-	            />
-
 	        <ImageView
+	            android:id="@+id/imageView1"
 	            android:layout_width="wrap_content"
 	            android:layout_height="80dip"
 	            android:layout_alignParentRight="true"
@@ -34,12 +26,20 @@
 	            android:src="@drawable/tempernum" />
 
 	        <TextView
+	            android:id="@+id/textView1"
+	            android:layout_width="180dip"
+	            android:layout_height="180dip"
+	            android:layout_centerHorizontal="true"
+	            android:layout_centerVertical="true"
+	            android:background="@drawable/temper" />
+
+	        <TextView
 	            android:id="@+id/textView2"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_alignTop="@+id/textView1"
 	            android:layout_centerHorizontal="true"
-	            android:layout_marginTop="61dp"
+	            android:layout_marginTop="60dp"
 	            android:text="20°C"
 	            android:textColor="#ffffff"
 	            android:textSize="30sp" />

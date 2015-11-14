@@ -126,20 +126,26 @@ public class MainActivity extends Activity implements OnItemClickListener{
         getActionBar().show();
         
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-		WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//		WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_main);
 		mContext = this;
         drawerLayout = (DrawerLayout) findViewById(R.id.draw_layout);
         initData();
+        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "Type1.txt" ; //检测是否为第一次启动
+		File addressFile = new File(pathString);
+		if (!addressFile.exists()){
+			initTxt();         //第一次启动建立需要用到的txt文件，否则在加载界面时会出现bug
+		}
+        
+        
         adapter2 = new ContentAdapter(this, list);
         
         mDrawerLayout = (DrawerLayout) findViewById(R.id.draw_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(adapter2);
         mDrawerList.setOnItemClickListener(this);  
-        
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.menu, R.string.Drawer_open, R.string.Drawer_close){
         	@Override
         	public void onDrawerOpened(View drawerView) {
@@ -157,28 +163,25 @@ public class MainActivity extends Activity implements OnItemClickListener{
         		invalidateOptionsMenu();  //Call onPrepareOptionsMenu();
         	}
         }; 
-       
-        
-        
-       
-       
         Fragment contentFragment1 = new Home();			   //直接默认启动Home Page
 		FragmentManager fm1 = getFragmentManager();
 		fm1.beginTransaction().addToBackStack(null).replace(R.id.content_frame,contentFragment1).commit();
-        
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);       
+        getActionBar().setHomeButtonEnabled(true);     
     }
 	
 	@Override
 	protected void onResume() {
 		// TODO 自动生成的方法存根
 		super.onResume();
+			Log.e("final", "onResume");
 	        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
 			File addressFile = new File(pathString);
+			Log.e("final","addressfile");
 			if (!addressFile.exists()) {
-				initTxt();
+//				initTxt();
+				Log.e("final", "qrtest");
 				Builder ConnetDialog = new AlertDialog.Builder(this,R.style.AlertDialog);
 				
 				ConnetDialog.setTitle("SmartCup");
@@ -198,7 +201,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO 自动生成的方法存根
-						Toast.makeText(mContext, "请手动添加智能水杯", 1).show();
+						Toast.makeText(mContext, "请手动添加智能水杯", Toast.LENGTH_SHORT).show();
 					}
 				});
 				ConnetDialog.show();			}
@@ -416,6 +419,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	 }
 	}
 	private void initTxt(){
+		
 		for (int i = 0; i < 24; i++) {
 			FileOutputStream fos1;
 			FileOutputStream fos2;
@@ -444,11 +448,8 @@ public class MainActivity extends Activity implements OnItemClickListener{
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
-			
-//			publicMethod.writeToTxt(mContext, "Type"+i+".txt", "0");
-//			publicMethod.writeToTxt(mContext, "Temperture"+i+".txt", "0");
 		}
-		for (int t = 0; t < 31; t++) {
+		for (int t = 1; t <= 31; t++) {
 //			publicMethod.writeToTxt(mContext, "Drink"+t+".txt", "0");
 			FileOutputStream fos3;
 			try {

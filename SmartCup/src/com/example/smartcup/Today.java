@@ -75,10 +75,6 @@ public class Today extends Fragment {
         layout = (LinearLayout) todayData.findViewById(R.id.tem1);
         layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         
-        
-//        showThread_t = new GetTxtThread_t();
-//        showThread_t.start();
-        
         return todayData;  
     }
 	@Override
@@ -158,13 +154,14 @@ private class InFilesObserver extends FileObserver{
 		XYMultipleSeriesRenderer rendererT = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset datasetT = new XYMultipleSeriesDataset();
         XYSeries seriesT = new XYSeries("");
-//        Random r2= new Random();
-//        for (int i = 1; i <= monthMax; i++) {
-//        	pMethod.writeToTxt(getActivity(), i+"ÈÕ.txt",r2.nextInt()%100+""); //
-//		}
         for (int i = 0; i < 24; i++) {
-			seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(),"Temperture"+i+".txt")));
-			rendererT.addTextLabel(i, i+":00");
+        	try {
+        		seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(),"Temperture"+i+".txt")).doubleValue());
+    			rendererT.addTextLabel(i, i+":00");
+			} catch (NumberFormatException e) {
+				// TODO: handle exception
+			}
+			
 		}
         datasetT.addSeries(seriesT);
         XYSeriesRenderer xyRendererT =  new XYSeriesRenderer();

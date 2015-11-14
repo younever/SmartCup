@@ -177,7 +177,7 @@ public class Week extends Fragment {
 //        }
 	    XYSeries series = new XYSeries("");
 	    // 填充数据
-	    for (int k = 0; k <= pMethod.getMonthMax(); k++) {
+	    for (int k = 1; k <= pMethod.getMonthMax(); k++) {
 	        // 填x,y值
 	        series.add(k, Double.valueOf(pMethod.readFromTxt(getActivity(), "Drinked"+k+".txt"))); //20 + r.nextInt() % 100
 	        renderer.addTextLabel(k,k+"日");               

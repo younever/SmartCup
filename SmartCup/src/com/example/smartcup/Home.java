@@ -34,12 +34,7 @@ public class Home extends Fragment {
     private ImageView contactsImage;  
     private ImageView newsImage;  
     private ImageView settingImage;   
-//    private TextView messageText;  
-//    private TextView contactsText;  
-//    private TextView newsText;  
-//    private TextView settingText;  
     private FragmentManager fragmentManager; 
-//    private FragmentManager mFmanager;
     
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +42,6 @@ public class Home extends Fragment {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.home,container,false);
 		textView = (TextView) view.findViewById(R.id.textView1);
-//		String text = "Home page";
-//		textView.setText(text);
-		
 		messageLayout = view.findViewById(R.id.message_layout);  
 		contactsLayout = view.findViewById(R.id.contacts_layout);  
         newsLayout = view.findViewById(R.id.news_layout);  
