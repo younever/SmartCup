@@ -17,11 +17,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint.Align;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +39,8 @@ public class AllData extends Fragment {
 	static PublicMethod pMethod = new PublicMethod();
 	public static TextView textView_en;
 	public static TextView textView_cn;
-	static GetTxtThread showThread;
-	public static boolean updateflag;
+//	static GetTxtThread showThread;
+//	public static boolean updateflag;
 	private FileObserver mFileObserver;
 	static Context mContext ;
 	
@@ -54,29 +56,48 @@ public class AllData extends Fragment {
         View newsLayout = inflater.inflate(R.layout.alldata, container,  
                 false);  
 //        pMethod.writeToTxt(getActivity(), "Type"+pMethod.getHour()+".txt", "apple"); ///初始化
+        int hour = pMethod.getHour();
+        Log.d("test", "onCreatView");
+        
         if (null == mFileObserver) {
-			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
+        	
+        	String path = getActivity().getFilesDir().getAbsolutePath()+"/Type"+hour+".txt";
+			mFileObserver = new InFilesObserver(path);
 			mFileObserver.startWatching();
         }
-        
         textView_en = (TextView) newsLayout.findViewById(R.id.textView1);
         textView_cn = (TextView) newsLayout.findViewById(R.id.textView2);
         showInit();
         mChartView = draGraphicalViewType();
         layout = (LinearLayout) newsLayout.findViewById(R.id.tem3);
         layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-        showThread = new GetTxtThread();
-        showThread.start();
-        
+//        showThread = new GetTxtThread();
+//        showThread.start();
+//        
         return newsLayout;  
     } 
-	
 	@Override
-	public void onDestroy() {
-		if(null != mFileObserver) mFileObserver.stopWatching();
+	public void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+		mFileObserver.stopWatching();
+		int hour = pMethod.getHour();
+		String path = getActivity().getFilesDir().getAbsolutePath()+"/Type"+hour+".txt";
+		mFileObserver = new InFilesObserver(path);
+		mFileObserver.startWatching();
+		Message message = new Message();
+		message.what = 3;
+		handler.sendMessage(message);
+        
 	}
 	
-	static class InFilesObserver extends FileObserver{
+//	@Override
+//	public void onDestroy() {
+//		if(null != mFileObserver) mFileObserver.stopWatching();
+//	}
+	
+	
+	private class InFilesObserver extends FileObserver{
 		
 		public InFilesObserver(String path,int mask)
 		{
@@ -91,7 +112,10 @@ public class AllData extends Fragment {
 			final int action = event&FileObserver.ALL_EVENTS;
 			switch (action) {
 			case FileObserver.MODIFY:
-				updateflag = true;
+//				updateflag = true;
+				Message msg = new Message();
+				msg.what = 3;
+				handler.sendMessage(msg);
 				break;
 			default:
 				break;
@@ -99,32 +123,13 @@ public class AllData extends Fragment {
 			
 		}
 	}
-	
-	public static class GetTxtThread extends Thread{
-		public void run(){
-			while(true)
-			{
-				synchronized (showThread) {
-					if(updateflag)
-					{
-//						showThread.sleep(100);
-						updateflag = false;
-						Message msg = new Message();
-						msg.what = 1;
-						handler.sendMessage(msg);
-					}
-				}
-			}
-		}
-		
-	}
-	
-    private static Handler handler = new Handler() {  
+    private  Handler handler = new Handler() {  
         @Override  
         public void handleMessage(Message msg) {  
         	int hour = pMethod.getHour();
-            if (msg.what == 1) {  
+            if (msg.what == 3) {  
             	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");
+            	Log.e("type", type);
             	switch (type) {
 				case "ORANGE":
 				case "orange":
@@ -157,7 +162,7 @@ public class AllData extends Fragment {
             }  
         }  
     }; 
-    
+//    
     private void showInit(){
     	int hour = pMethod.getHour();
     	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");

@@ -11,6 +11,7 @@ import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
 import com.example.smartcup.R;
+
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Color;
@@ -19,12 +20,14 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Week extends Fragment {
 	
@@ -33,8 +36,8 @@ public class Week extends Fragment {
 	private GraphicalView mChartView; //显示图表
 	static PublicMethod pMethod = new PublicMethod();
 	static TextView textView_d;
-	static GetTxtThread_d showThread_d;
-	private static boolean updateflag;
+//	static GetTxtThread_d showThread_d;
+//	private static boolean updateflag;
 	static Context mContext;
 	
 	@Override
@@ -48,43 +51,64 @@ public class Week extends Fragment {
             Bundle savedInstanceState) {  
         View contactsLayout = inflater.inflate(R.layout.week,  
                 container, false);  
-        if (null == mFileObserver) {
-			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
-			mFileObserver.startWatching();
-        }
-        
-        
         layout = (LinearLayout) contactsLayout.findViewById(R.id.tem2);
         textView_d = (TextView) contactsLayout.findViewById(R.id.drink);
+        
         int date = pMethod.getDate();
         String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
-    	textView_d.setText(drink+" ml"); 
+    	textView_d.setText(drink+"ml"); 
+        
+		if (null == mFileObserver) {
+        	
+        	String path = getActivity().getFilesDir().getAbsolutePath()+"/Drinked"+date+".txt";
+			mFileObserver = new InFilesObserver(path);
+			mFileObserver.startWatching();
+//			Log.d("firsttime", mFileObserver.toString());
+        }
+//        String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
+//    	textView_d.setText(drink+" ml"); 
     	mChartView = draGraphicalViewDrink();
     	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-        showThread_d = new GetTxtThread_d();
-        showThread_d.start();
+//        showThread_d = new GetTxtThread_d();
+//        showThread_d.start();
         return contactsLayout;  
     } 
 	
-	public static class GetTxtThread_d extends Thread{
-		public void run(){
-			while(true)
-			{
-				synchronized (showThread_d) {
-					if(updateflag)
-					{
-//						showThread.sleep(100);
-						updateflag = false;
-						Message msg = new Message();
-						msg.what = 1;
-						handler.sendMessage(msg);
-					}
-				}
-			}
-		}
+	@Override
+	public void onPause() {
+		// TODO 自动生成的方法存根
+		super.onPause();
+//		mFileObserver.stopWatching();
+		Log.d("test", "onPause");
+	}
+	@Override
+	public void onDestroy() {
+		// TODO 自动生成的方法存根
+		super.onDestroy();
+		mFileObserver.stopWatching();
+		Log.d("test", "onDestroy");
+	}
+
+	
+	@Override
+	public void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+//		if (null == mFileObserver) {
+			mFileObserver.stopWatching();
+			int date = pMethod.getDate();
+        	String path = getActivity().getFilesDir().getAbsolutePath()+"/Drinked"+date+".txt";
+			mFileObserver = new InFilesObserver(path);
+			mFileObserver.startWatching();
+			String drink = pMethod.readFromTxt(mContext, "Drinked"+date+".txt");
+			
+			
+//        }
+//		Log.d("test", "onResume");
 		
 	}
-	static class InFilesObserver extends FileObserver{
+
+	private class InFilesObserver extends FileObserver{
 		
 		public InFilesObserver(String path,int mask)
 		{
@@ -99,7 +123,10 @@ public class Week extends Fragment {
 			final int action = event&FileObserver.ALL_EVENTS;
 			switch (action) {
 			case FileObserver.MODIFY:
-				updateflag = true;
+//				updateflag = true;
+				Message msg = new Message();
+				msg.what = 2;
+				handler.sendMessage(msg);
 				break;
 			default:
 				break;
@@ -108,17 +135,18 @@ public class Week extends Fragment {
 		}
 	}
 	
-	private static Handler handler = new Handler() {  
+	private  Handler handler = new Handler() {  
         @Override  
         public void handleMessage(Message msg) {  
         	int date = pMethod.getDate();
-            if (msg.what == 1) {  
+            if (msg.what == 2) {  
             	String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
-            	textView_d.setText(drink+" ml");            	
+            	textView_d.setText(drink+" ml");   
+            	Log.e("drink", drink);
             }  
         }  
     }; 
-	
+//	
 
 	private GraphicalView draGraphicalViewDrink(){
 		GraphicalView mChartView;

@@ -32,6 +32,13 @@ import java.util.TimerTask;
 
 
 
+
+
+
+
+
+
+
 import com.example.smartcup.ContentModel;
 import com.example.smartcup.R;
 import com.example.smartcup.R.style;
@@ -53,8 +60,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileObserver;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,7 +89,7 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		CILENT
 	};
 	
-	private Context mContext;
+	private static Context mContext;
 	static String BlueToothAddress = "null";
 	static ServerOrCilent serviceOrCilent = ServerOrCilent.NONE;
 	static boolean isOpen = false;
@@ -100,6 +111,11 @@ public class MainActivity extends Activity implements OnItemClickListener{
 	private boolean qrReady=false;
 
 	public PublicMethod publicMethod;
+	
+//	public FileObserver mFileObserver ;
+//	public static boolean updateflag=false;
+//	static GetTxtThread showThread;
+	
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +140,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
         mDrawerList.setAdapter(adapter2);
         mDrawerList.setOnItemClickListener(this);  
         
-       	
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.menu, R.string.Drawer_open, R.string.Drawer_close){
         	@Override
         	public void onDrawerOpened(View drawerView) {
@@ -145,56 +160,6 @@ public class MainActivity extends Activity implements OnItemClickListener{
         }; 
        
         initTxt();
-		
-        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
-		File addressFile = new File(pathString);
-		if (!addressFile.exists()) {
-			
-			Builder ConnetDialog = new AlertDialog.Builder(this);
-			ConnetDialog.setTitle("SmartCup");
-			ConnetDialog.setMessage("是否进行二维码连接");
-			ConnetDialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
-		
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO 自动生成的方法存根
-					serviceOrCilent=ServerOrCilent.CILENT;
-					Intent intent_qr = new Intent(mContext,CaptureActivity.class);
-					startActivityForResult(intent_qr, 1);
-				}
-			});
-			ConnetDialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO 自动生成的方法存根
-					Toast.makeText(mContext, "请手动添加智能水杯", 1).show();
-				}
-			});
-			ConnetDialog.show();
-		}
-		else {
-			serviceOrCilent=ServerOrCilent.CILENT;
-			try {
-				FileInputStream fis1 = mContext.openFileInput("BlueToothAddress.txt");
-				InputStreamReader is1 = new InputStreamReader(fis1, "UTF-8");
-				char input1[] = new char[fis1.available()];
-				is1.read(input1);
-				is1.close();
-				fis1.close();
-				BlueToothAddress = new String(input1);
-				startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
-			} catch (FileNotFoundException e) {
-				// TODO 自动生成的 catch 块
-				e.printStackTrace();
-			} catch (UnsupportedEncodingException e) {
-				// TODO 自动生成的 catch 块
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO 自动生成的 catch 块
-				e.printStackTrace();
-			}
-		}
         
        
        
@@ -207,6 +172,69 @@ public class MainActivity extends Activity implements OnItemClickListener{
         getActionBar().setHomeButtonEnabled(true);       
     }
 	
+	@Override
+	protected void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+//		 if (null == mFileObserver) { //进行文件的监控，后续版本去掉
+//				mFileObserver = new InFilesObserver(mContext.getFilesDir().getAbsolutePath());
+//				mFileObserver.startWatching();
+//	        }
+//	      showThread = new GetTxtThread();
+//	      showThread.start();
+			
+	        String pathString = mContext.getFilesDir().getAbsolutePath() + "/" + "BlueToothAddress.txt" ;
+			File addressFile = new File(pathString);
+			if (!addressFile.exists()) {
+				
+				Builder ConnetDialog = new AlertDialog.Builder(this);
+				ConnetDialog.setTitle("SmartCup");
+				ConnetDialog.setMessage("是否进行二维码连接");
+				ConnetDialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
+			
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO 自动生成的方法存根
+						serviceOrCilent=ServerOrCilent.CILENT;
+						Intent intent_qr = new Intent(mContext,CaptureActivity.class);
+						startActivityForResult(intent_qr, 1);
+					}
+				});
+				ConnetDialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO 自动生成的方法存根
+						Toast.makeText(mContext, "请手动添加智能水杯", 1).show();
+					}
+				});
+				ConnetDialog.show();
+			}
+			else {
+				serviceOrCilent=ServerOrCilent.CILENT;
+				try {
+					FileInputStream fis1 = mContext.openFileInput("BlueToothAddress.txt");
+					InputStreamReader is1 = new InputStreamReader(fis1, "UTF-8");
+					char input1[] = new char[fis1.available()];
+					is1.read(input1);
+					is1.close();
+					fis1.close();
+					BlueToothAddress = new String(input1);
+					startService(new Intent(MainActivity.this,ReceiveService.class));//000000000000000000
+				} catch (FileNotFoundException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO 自动生成的 catch 块
+					e.printStackTrace();
+				}
+			}
+	        
+	       
+	}
 	private void initData() {
 		list=new ArrayList<ContentModel>();	
 		list.add(new ContentModel(R.drawable.home, "主页"));
@@ -217,6 +245,46 @@ public class MainActivity extends Activity implements OnItemClickListener{
 		list.add(new ContentModel(R.drawable.temp, "重置地址"));
 	}
 	
+//	static class InFilesObserver extends FileObserver{
+//		
+//		public InFilesObserver(String path,int mask)
+//		{
+//			super(path,mask);
+//		}
+//		public InFilesObserver (String path) {
+//			super(path);
+//		}
+//		@Override
+//		public void onEvent(int event, String path) {
+//			// TODO 自动生成的方法存根
+//			final int action = event&FileObserver.ALL_EVENTS;
+//			switch (action) {
+//			case FileObserver.MODIFY:
+////				updateflag = true;
+//				Log.e("test", "0000000000000000");
+////				Week.textView_d.setText("1004");
+////				Message msg = new Message();
+////				msg.what = 1;
+////				handler.sendMessage(msg);
+//				break;
+//			default:
+//				break;
+//			}
+//			
+//		}
+//	}
+//	
+//	private static Handler handler = new Handler() {  
+//        @Override  
+//        public void handleMessage(Message msg) {  
+//        	if(msg.what==1){
+//        		msg.what=0;
+////        		AllData.textView_cn.setText("sssssssss");
+//        		Log.e("test", "22222222222222");
+//        		Toast.makeText(mContext, "dddddd", Toast.LENGTH_SHORT).show();
+//        	}      		
+//        }  
+//    }; 
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

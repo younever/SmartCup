@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.MenuCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +37,8 @@ public class Today extends Fragment {
 	static PublicMethod pMethod = new PublicMethod();
 	String date[];
 	static TextView textView_t;
-	static GetTxtThread_t showThread_t;
-	public static boolean updateflag;
+//	static GetTxtThread_t showThread_t;
+//	public static boolean updateflag;
 	private FileObserver mFileObserver;
 	static Context mContext ;
 	
@@ -51,27 +53,45 @@ public class Today extends Fragment {
             Bundle savedInstanceState) {  
         View todayData = inflater.inflate(R.layout.today, container, false);  
         
-//        FileObserver mFileObserver = new 
         textView_t = (TextView) todayData.findViewById(R.id.textView2);
-        int date = pMethod.getDate();
-        String drink = pMethod.readFromTxt(mContext,"Temperture"+date+".txt");
-    	textView_t.setText(drink+"°C"); 
-        if (null == mFileObserver) {
-			mFileObserver = new InFilesObserver(getActivity().getFilesDir().getAbsolutePath());
+        int hour = pMethod.getHour();
+        String temperature = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
+    	textView_t.setText(temperature+"°C"); 
+        
+    	
+		if (null == mFileObserver) {
+//        	int hour = pMethod.getHour();
+        	String path = getActivity().getFilesDir().getAbsolutePath()+"/Temperture"+hour+".txt";
+			mFileObserver = new InFilesObserver(path);
 			mFileObserver.startWatching();
         }
+    	
         mChartView = drawGraphicalViewTemperture();
         layout = (LinearLayout) todayData.findViewById(R.id.tem1);
         layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         
-        showThread_t = new GetTxtThread_t();
-        showThread_t.start();
+//        showThread_t = new GetTxtThread_t();
+//        showThread_t.start();
         
         return todayData;  
     }
+	@Override
+	public void onResume() {
+		// TODO 自动生成的方法存根
+		super.onResume();
+		mFileObserver.stopWatching();
+		int hour = pMethod.getHour();
+    	String path = getActivity().getFilesDir().getAbsolutePath()+"/Temperture"+hour+".txt";
+		mFileObserver = new InFilesObserver(path);
+		mFileObserver.startWatching();
+		Message message = new Message();
+		message.what = 1;
+		handler.sendMessage(message);
+
+	}
 	
-	
-static class InFilesObserver extends FileObserver{
+//	
+private class InFilesObserver extends FileObserver{
 		
 		public InFilesObserver(String path,int mask)
 		{
@@ -86,7 +106,10 @@ static class InFilesObserver extends FileObserver{
 			final int action = event&FileObserver.ALL_EVENTS;
 			switch (action) {
 			case FileObserver.MODIFY:
-				updateflag = true;
+//				updateflag = true;
+				Message msg = new Message();
+				msg.what = 1;
+				handler.sendMessage(msg);
 				break;
 			default:
 				break;
@@ -94,38 +117,19 @@ static class InFilesObserver extends FileObserver{
 			
 		}
 	}
-	
-	public static class GetTxtThread_t extends Thread{
-		public void run(){
-			while(true)
-			{
-				synchronized (showThread_t) {
-					if(updateflag)
-					{
-//						showThread.sleep(100);
-						updateflag = false;
-						Message msg = new Message();
-						msg.what = 1;
-						handler.sendMessage(msg);
-					}
-				}
-			}
-		}
-		
-	}
-	
-    private static Handler handler = new Handler() {  
+
+    private  Handler handler = new Handler() {  
         @Override  
         public void handleMessage(Message msg) {  
         	int hour = pMethod.getHour();
             if (msg.what == 1) {  
             	String temperture = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
-            	textView_t.setText(temperture+"°C");
-            	
+            	textView_t.setText(temperture+"°C");  
+            	Log.e("temperature", temperture);
             }  
         }  
     }; 
-   
+//   
 
 	private GraphicalView drawGraphicalViewTemperture()
 	{

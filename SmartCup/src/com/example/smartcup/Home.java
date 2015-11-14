@@ -58,19 +58,6 @@ public class Home extends Fragment {
         contactsImage = (ImageView) view.findViewById(R.id.contacts_image);  
         newsImage = (ImageView) view.findViewById(R.id.news_image);  
         settingImage = (ImageView) view.findViewById(R.id.setting_image);  
-//        messageText = (TextView) view.findViewById(R.id.message_text);  
-//        contactsText = (TextView) view.findViewById(R.id.contacts_text);  
-//        newsText = (TextView) view.findViewById(R.id.news_text);  
-//        settingText = (TextView) view.findViewById(R.id.setting_text);  
-        
-//        mFmanager = getFragmentManager();
-//        if (savedInstanceState != null) {
-//        	messageFragment = (Today) mFmanager.findFragmentByTag("messageFragment"); 
-//        	contactsFragment = (Week) mFmanager.findFragmentByTag("contactsFragment"); 
-//        	newsFragment = (AllData) mFmanager.findFragmentByTag("newsFragment"); 
-//        	settingFragment = (Friend) mFmanager.findFragmentByTag("settingFragment"); 
-//		}
-//        super.onCreate(savedInstanceState); 
         
         
         messageLayout.setOnClickListener(new OnClickListener() {
@@ -110,7 +97,10 @@ public class Home extends Fragment {
  
         fragmentManager = getFragmentManager();  
         // 第一次启动时选中第1个tab  
-        setTabSelection(1);  
+        setTabSelection(2);
+        setTabSelection(1); 
+        setTabSelection(0);
+        
 		return view;	
 		
 	}

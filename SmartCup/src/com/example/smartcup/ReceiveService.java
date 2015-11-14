@@ -96,6 +96,12 @@ public class ReceiveService extends Service {
 				while(firstConnect==0)
 				{
 					try {
+						sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO 自动生成的 catch 块
+						e1.printStackTrace();
+					}
+					try {
 						System.out.println("匹配");
 						// 创建一个Socket连接：只需要服务器在注册时的UUID号
 						// socket =
@@ -120,8 +126,6 @@ public class ReceiveService extends Service {
 				
 			}
 		};
-		
-
 		// 读取数据
 		public class readThread extends Thread {
 			public void run() {
@@ -141,9 +145,10 @@ public class ReceiveService extends Service {
 				while (true) {
 					if (reConnect ==1) {
 						try {
+							sleep(1000);
 							chatActivity.socket.connect();
 							reConnect = 0;
-						} catch (IOException e) {
+						} catch (IOException | InterruptedException e) {
 							// TODO 自动生成的 catch 块
 							reConnect = 1;
 							e.printStackTrace();
@@ -158,7 +163,7 @@ public class ReceiveService extends Service {
 								buf_data[i] = buffer[i];
 							}
 							String s = new String(buf_data);
-							int year = publicMethod.getYear();
+//							int year = publicMethod.getYear();
 							int date = publicMethod.getDate();
 							int month = publicMethod.getMonth();
 							int hour = publicMethod.getHour();
