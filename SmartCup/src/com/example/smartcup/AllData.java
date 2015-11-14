@@ -39,8 +39,6 @@ public class AllData extends Fragment {
 	static PublicMethod pMethod = new PublicMethod();
 	public static TextView textView_en;
 	public static TextView textView_cn;
-//	static GetTxtThread showThread;
-//	public static boolean updateflag;
 	private FileObserver mFileObserver;
 	static Context mContext ;
 	
@@ -93,11 +91,6 @@ public class AllData extends Fragment {
 		handler.sendMessage(message);
         
 	}
-	
-//	@Override
-//	public void onDestroy() {
-//		if(null != mFileObserver) mFileObserver.stopWatching();
-//	}
 	
 	
 	private class InFilesObserver extends FileObserver{

@@ -189,7 +189,7 @@ public class ReceiveService extends Service {
 									publicMethod.writeToTxt(getApplicationContext(), "Type"+hour+".txt", s.substring(6));
 									sendMessageHandle("Type");
 									break;
-								case "DDDDDD":	//D5678D 是蓝牙模块发送过来关于当前喝水量的标志位
+								case "DDDDDD":						//D5678D 是蓝牙模块发送过来关于当前喝水量的标志位
 									try {
 										String waterDrinkedString = publicMethod.readFromTxt(mContext, "Drinked"+date+".txt");
 										int waterDrinkedInt  = Integer.valueOf(waterDrinkedString).intValue();
@@ -234,9 +234,6 @@ public class ReceiveService extends Service {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-//			list.add(new deviceListItem(msg, false));
-//			mAdapter.notifyDataSetChanged();
-//			mListView.setSelection(list.size() - 1);
 		}
 
 		/* 停止客户端连接 */

@@ -37,8 +37,6 @@ public class Week extends Fragment {
 	private GraphicalView mChartView; //显示图表
 	static PublicMethod pMethod = new PublicMethod();
 	static TextView textView_d;
-//	static GetTxtThread_d showThread_d;
-//	private static boolean updateflag;
 	static Context mContext;
 	
 	@Override
@@ -170,11 +168,6 @@ public class Week extends Fragment {
 			min = 1;
 			max = 7;
 		} 
-//        Random r = new Random(); //临时数值
-//        for(int i=0;i<=24;i++)
-//        {
-//       	 pMethod.writeToTxt(getActivity(),i+":00.txt",r.nextInt()%100+"");
-//        }
 	    XYSeries series = new XYSeries("");
 	    // 填充数据
 	    for (int k = 1; k <= pMethod.getMonthMax(); k++) {

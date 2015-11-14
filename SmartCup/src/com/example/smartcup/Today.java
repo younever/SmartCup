@@ -38,8 +38,6 @@ public class Today extends Fragment {
 	static PublicMethod pMethod = new PublicMethod();
 	String date[];
 	static TextView textView_t;
-//	static GetTxtThread_t showThread_t;
-//	public static boolean updateflag;
 	private FileObserver mFileObserver;
 	static Context mContext ;
 	
