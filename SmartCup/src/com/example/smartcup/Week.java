@@ -143,11 +143,14 @@ public class Week extends Fragment {
         	int date = pMethod.getDate();
             if (msg.what == 2) {  
             	String drink = pMethod.readFromTxt(mContext,"Drinked"+date+".txt");
-            	textView_d.setText(drink+" ml");   
-            	Log.e("drink", drink);
-            	layout.removeView(mChartView);
-            	mChartView = draGraphicalViewDrink();
-            	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+            	if (!drink.equalsIgnoreCase("")) {
+            		textView_d.setText(drink+" ml");
+                	Log.e("drink", drink);
+                	layout.removeView(mChartView);
+                	mChartView = draGraphicalViewDrink();
+                	layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+				}
+            	
             }  
         }  
     }; 

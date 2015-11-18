@@ -108,7 +108,6 @@ public class AllData extends Fragment {
 			final int action = event&FileObserver.ALL_EVENTS;
 			switch (action) {
 			case FileObserver.MODIFY:
-//				updateflag = true;
 				Message msg = new Message();
 				msg.what = 3;
 				handler.sendMessage(msg);
@@ -122,6 +121,9 @@ public class AllData extends Fragment {
     private  Handler handler = new Handler() {  
         @Override  
         public void handleMessage(Message msg) {  
+        	layout.removeView(mChartView);
+        	mChartView = draGraphicalViewType();
+            layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         	int hour = pMethod.getHour();
             if (msg.what == 3) {  
             	String type = pMethod.readFromTxt(mContext,"Type"+hour+".txt");
@@ -157,9 +159,9 @@ public class AllData extends Fragment {
 					textView_cn.setText("Î´ÖªÒûÆ·");
 					break;
 				}
-            	layout.removeView(mChartView);
-            	mChartView = draGraphicalViewType();
-                layout.addView(mChartView,new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+            	textView_cn.bringToFront();
+            	textView_en.bringToFront();
+            	
             }  
         }  
     }; 

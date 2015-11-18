@@ -124,12 +124,15 @@ private class InFilesObserver extends FileObserver{
         	int hour = pMethod.getHour();
             if (msg.what == 1) {  
             	String temperture = pMethod.readFromTxt(mContext,"Temperture"+hour+".txt");
-            	drawGraphicalViewTemperture();
-            	textView_t.setText(temperture+"°C");  
-            	Log.e("temperature", temperture);
-            	layout.removeView(mChartView);
-                mChartView = drawGraphicalViewTemperture();
-                layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+            	if (!temperture.equals("")) {//文件的更改包括擦除内容和重写，在擦写的时候也算是MODIFY，对擦除的监听快于写入的速度导致程序奔溃
+            		textView_t.setText(temperture+"°C");  
+                	Log.e("temperature", temperture);
+                	layout.removeView(mChartView);
+                    mChartView = drawGraphicalViewTemperture();
+                    layout.addView(mChartView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+                    drawGraphicalViewTemperture();
+				}
+            	
             }  
         }  
     }; 
@@ -153,7 +156,7 @@ private class InFilesObserver extends FileObserver{
         XYMultipleSeriesDataset datasetT = new XYMultipleSeriesDataset();
         XYSeries seriesT = new XYSeries("");
         for (int i = 0; i < 24; i++) {
-        	try {
+        	try {                                        //
         		seriesT.add(i,Double.valueOf(pMethod.readFromTxt(getActivity(),"Temperture"+i+".txt")).doubleValue());
     			rendererT.addTextLabel(i, i+":00");
 			} catch (NumberFormatException e) {

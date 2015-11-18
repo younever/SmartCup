@@ -205,7 +205,6 @@ public class ReceiveService extends Service {
 								default:
 									sendMessageHandle("错误数据，请重传");
 									break;
-									
 								}	
 							}
 							else {
