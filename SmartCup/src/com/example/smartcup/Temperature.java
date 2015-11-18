@@ -31,7 +31,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Today extends Fragment {
+public class Temperature extends Fragment {
 	
 	LinearLayout layout;
 	private GraphicalView mChartView; //œ‘ æÕº±Ì
@@ -50,7 +50,7 @@ public class Today extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
-        View todayData = inflater.inflate(R.layout.today, container, false);  
+        View todayData = inflater.inflate(R.layout.temperature, container, false);  
         textView_t = (TextView) todayData.findViewById(R.id.textView2);
         
         

@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Week extends Fragment {
+public class Drinked extends Fragment {
 	
 	LinearLayout layout;
 	private FileObserver mFileObserver;
@@ -48,7 +48,7 @@ public class Week extends Fragment {
 	@Override  
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  
             Bundle savedInstanceState) {  
-        View contactsLayout = inflater.inflate(R.layout.week,  
+        View contactsLayout = inflater.inflate(R.layout.drinked,  
                 container, false);  
         layout = (LinearLayout) contactsLayout.findViewById(R.id.tem2);
         textView_d = (TextView) contactsLayout.findViewById(R.id.drink);

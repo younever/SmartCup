@@ -22,13 +22,13 @@ import android.widget.TextView;
 
 public class Home extends Fragment {
 	private TextView textView;
-	private Today messageFragment;
-    private Week contactsFragment;  
-    private AllData newsFragment;  
+	private Temperature temperatureFragment;
+    private Drinked drinkedFragment;  
+    private Type typeFragment;  
     private Friend settingFragment;  
-    private View messageLayout;   
-    private View contactsLayout;  
-    private View newsLayout;   
+    private View temperatureLayout;
+    private View drinkedlayout ;
+    private View typeLayout;   
     private View settingLayout;  
     private ImageView messageImage;  
     private ImageView contactsImage;  
@@ -41,18 +41,19 @@ public class Home extends Fragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.home,container,false);
+		
 		textView = (TextView) view.findViewById(R.id.textView1);
-		messageLayout = view.findViewById(R.id.message_layout);  
-		contactsLayout = view.findViewById(R.id.contacts_layout);  
-        newsLayout = view.findViewById(R.id.news_layout);  
+		temperatureLayout = view.findViewById(R.id.temperature_layout);  
+		drinkedlayout = view.findViewById(R.id.drinked_layout);  
+        typeLayout = view.findViewById(R.id.type_layout);  
         settingLayout = view.findViewById(R.id.setting_layout);  
-        messageImage = (ImageView) view.findViewById(R.id.message_image);  
-        contactsImage = (ImageView) view.findViewById(R.id.contacts_image);  
-        newsImage = (ImageView) view.findViewById(R.id.news_image);  
+        messageImage = (ImageView) view.findViewById(R.id.temperature_image);  
+        contactsImage = (ImageView) view.findViewById(R.id.drinked_image);  
+        newsImage = (ImageView) view.findViewById(R.id.type_image);  
         settingImage = (ImageView) view.findViewById(R.id.setting_image);  
         
         
-        messageLayout.setOnClickListener(new OnClickListener() {
+        temperatureLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -60,7 +61,7 @@ public class Home extends Fragment {
 				setTabSelection(0); 
 			}
 		});  
-        contactsLayout.setOnClickListener(new OnClickListener() {
+        drinkedlayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -68,7 +69,7 @@ public class Home extends Fragment {
 				setTabSelection(1); 
 			}
 		});  
-        newsLayout.setOnClickListener(new OnClickListener() {
+        typeLayout.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -115,13 +116,13 @@ public class Home extends Fragment {
             // 当点击了消息tab时，改变控件的图片和文字颜色  
             
 //            messageText.setTextColor(Color.parseColor("#82858b"));  
-            if (messageFragment == null) {  
+            if (temperatureFragment == null) {  
                 // 如果MessageFragment为空，则创建一个并添 加到界面上  
-                messageFragment = new Today();  
-                transaction.add(R.id.content_frame, messageFragment);  
+            	temperatureFragment = new Temperature();  
+                transaction.add(R.id.content_frame, temperatureFragment);  
             } else {  
                 // 如果MessageFragment不为空，则直接将它显示出来  
-                transaction.show(messageFragment);  
+                transaction.show(temperatureFragment);  
             } 
             messageImage.setImageResource(R.drawable.temperture2);  
             break;  
@@ -129,13 +130,13 @@ public class Home extends Fragment {
             // 当点击了联系人tab时，改变控件的图片和文字颜色  
             
 //            contactsText.setTextColor(Color.parseColor("#82858b"));  
-            if (contactsFragment == null) {  
+            if (drinkedFragment == null) {  
                 // 如果ContactsFragment为空，则创建一个并添加到界面上  
-                contactsFragment = new Week();  
-                transaction.add(R.id.content_frame, contactsFragment);  
+            	drinkedFragment = new Drinked();  
+                transaction.add(R.id.content_frame, drinkedFragment);  
             } else {  
                 // 如果ContactsFragment不为空，则直接将它显示出来  
-                transaction.show(contactsFragment);  
+                transaction.show(drinkedFragment);  
             }  
             contactsImage.setImageResource(R.drawable.cup2);  
             break;  
@@ -143,13 +144,13 @@ public class Home extends Fragment {
             // 当点击了动态tab时，改变控件的图片和文字颜色  
             newsImage.setImageResource(R.drawable.smartcup1);  
 //            newsText.setTextColor(Color.parseColor("#82858b"));  
-            if (newsFragment == null) {  
+            if (typeFragment == null) {  
                 // 如果NewsFragment为空，则创建一个并添加到界面上  
-                newsFragment = new AllData();  
-                transaction.add(R.id.content_frame, newsFragment);  
+            	typeFragment = new Type();  
+                transaction.add(R.id.content_frame, typeFragment);  
             } else {  
                 // 如果NewsFragment不为空，则直接将它显示出来  
-                transaction.show(newsFragment);  
+                transaction.show(typeFragment);  
             } 
             newsImage.setImageResource(R.drawable.smartcup2);
             break;  
@@ -193,14 +194,14 @@ public class Home extends Fragment {
      *            用于对Fragment执行操作的事务 
      */  
     private void hideFragments(FragmentTransaction transaction) {  
-        if (messageFragment != null) {  
-            transaction.hide(messageFragment);  
+        if (temperatureFragment != null) {  
+            transaction.hide(temperatureFragment);  
         }  
-        if (contactsFragment != null) {  
-            transaction.hide(contactsFragment);  
+        if (drinkedFragment != null) {  
+            transaction.hide(drinkedFragment);  
         }  
-        if (newsFragment != null) {  
-            transaction.hide(newsFragment);  
+        if (typeFragment != null) {  
+            transaction.hide(typeFragment);  
         }  
         if (settingFragment != null) {  
             transaction.hide(settingFragment);  
